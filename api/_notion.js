@@ -261,13 +261,21 @@ export function blocosParaHtml(blocos) {
       case 'heading_3':
         html += `<h3>${richText(dados.rich_text)}</h3>`;
         break;
-      case 'bulleted_list_item':
+      case 'bulleted_list_item': {
+        const item = richText(dados.rich_text);
+        if (!item.trim()) break;
         if (lista !== 'ul') { fecharLista(); html += '<ul>'; lista = 'ul'; }
-        html += `<li>${richText(dados.rich_text)}</li>`;
+        html += `<li>${item}</li>`;
         break;
-      case 'numbered_list_item':
+      }
+        break;
+      case 'numbered_list_item': {
+        const item = richText(dados.rich_text);
+        if (!item.trim()) break;
         if (lista !== 'ol') { fecharLista(); html += '<ol>'; lista = 'ol'; }
-        html += `<li>${richText(dados.rich_text)}</li>`;
+        html += `<li>${item}</li>`;
+        break;
+      }
         break;
       case 'quote':
         html += `<blockquote>${richText(dados.rich_text)}</blockquote>`;

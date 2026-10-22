@@ -100,7 +100,8 @@
 .assinatura-nome{font-family:"Chakra Petch";font-size:12.5px;letter-spacing:.04em;color:var(--muted)}
 .assinatura-nome strong{color:var(--amber-soft);font-weight:700}
 .artigo-capa{margin:36px 0 0;border-radius:14px;overflow:hidden;border:1px solid var(--border)}
-.artigo-capa img{width:100%;height:auto;display:block}
+.artigo-capa img{width:100%;height:auto;max-height:min(72vh,560px);object-fit:cover;
+  object-position:center 40%;display:block}
 .artigo-capa figcaption{padding:10px 16px;font-family:"Chakra Petch";font-size:10.5px;letter-spacing:.1em;
   text-transform:uppercase;color:var(--muted-2);background:rgba(255,236,222,.03)}
 .artigo-corpo{max-width:760px;margin:38px 0 0;font-size:19px;line-height:1.72;color:rgba(247,239,232,.9)}
@@ -119,9 +120,16 @@
   font-size:23px;line-height:1.45;color:var(--cream);font-style:italic}
 .artigo-corpo blockquote p{margin:0}
 .artigo-corpo figure{margin:34px 0}
-.artigo-corpo figure img{width:100%;height:auto;border-radius:12px;border:1px solid var(--border);display:block}
+.artigo-corpo figure{text-align:center}
+.artigo-corpo figure img{
+  width:auto;max-width:100%;height:auto;max-height:min(78vh,720px);
+  object-fit:contain;border-radius:12px;border:1px solid var(--border);
+  display:block;margin:0 auto}
 .artigo-corpo figcaption{margin-top:10px;font-family:"Chakra Petch";font-size:11px;letter-spacing:.1em;
   text-transform:uppercase;color:var(--muted-2);line-height:1.5}
+.artigo-corpo > img,.artigo-corpo p img{
+  max-width:100%;height:auto;max-height:min(78vh,720px);object-fit:contain;
+  border-radius:12px;display:block;margin:26px auto}
 .artigo-corpo hr{border:0;height:1px;background:var(--border);margin:40px 0}
 .artigo-corpo code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86em;
   background:rgba(255,236,222,.08);padding:2px 6px;border-radius:4px;color:var(--amber-soft)}
