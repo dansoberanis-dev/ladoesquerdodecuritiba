@@ -27,6 +27,7 @@ O blog lê as matérias de um banco de dados no **Notion**. O editor escreve, ma
 site atualiza em até 60 segundos.
 
 Passo a passo completo: [`BLOG-COMO-ALIMENTAR.md`](BLOG-COMO-ALIMENTAR.md)
+Guia curto para quem escreve (sem termos técnicos): [`GUIA-DO-EDITOR.md`](GUIA-DO-EDITOR.md)
 
 - Autor vazio → assina **Redação Lado Esquerdo de Curitiba**
 - Autor preenchido → **Por Nome do Autor**

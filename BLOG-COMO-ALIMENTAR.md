@@ -15,9 +15,11 @@
 | Capa | Files & media |
 | Data | Date |
 | Autor | Text |
-| Publicado | Checkbox |
+| **Status** | Status *(recomendado: Rascunho · Em revisão · Publicado)* |
+| Publicado | Checkbox *(opcional, alternativa ao Status)* |
 | Destaque | Checkbox |
 | Crédito da foto | Text |
+| Criado por | Created by *(opcional — preenche o autor automaticamente)* |
 
 3. Nas opções do **Categoria**, cadastre: `Política local`, `Entrevista`, `Mobilidade`, `Direitos humanos`, `Cultura`, `Educação`.
 
@@ -84,6 +86,135 @@ Não é preciso uma atualização para removê-los. O site consulta o Notion **p
 | Notion ainda não configurado | matérias de demonstração **com uma faixa “Prévia”** no topo |
 
 Ou seja: no segundo em que a primeira matéria real for publicada, os exemplos e a faixa de prévia desaparecem.
+
+---
+## Quem pode publicar (dúvidas frequentes)
+
+### Guest pode criar matéria nova? **Sim.**
+
+O que define o que um guest pode fazer é a permissão da página, não o tipo de conta:
+
+| Permissão dada | Guest consegue |
+|---|---|
+| Pode editar | **criar novas linhas** no banco, editar as existentes, subir imagens |
+| Pode comentar | só comentar |
+| Pode visualizar | apenas ler |
+
+O que um guest **não** consegue: ver o resto do seu workspace (outras páginas, bases, finanças),
+criar páginas fora do que foi compartilhado, ou mudar configurações. Escopo, não capacidade.
+
+### Quantas pessoas podem postar na mesma conta?
+
+| | Quantidade | Custo |
+|---|---|---|
+| **Membros** (workspace) | sem limite técnico | Free: com 2+ membros o workspace cai no teto de 1.000 blocos. Plus US$ 10/membro/mês, Business US$ 20 |
+| **Guests** | 10 no Free · ilimitado no Plus em diante | nunca são cobrados |
+
+Na prática para o Lado Esquerdo: **1 membro (o dono) + colaboradores como guests** na página
+"Matérias". Todos postam, ninguém paga assento, e o workspace continua ilimitado.
+
+### E se cada colaborador tiver a própria conta/workspace do Notion?
+
+Tecnicamente **dá** — o site suporta mais de uma fonte. Cada workspace precisa da **sua própria
+integração** conectada ao **seu próprio banco**, e aí você configura:
+
+```
+NOTION_TOKEN       = secret_...        (workspace 1)
+NOTION_DATABASE_ID = 1a2b3c...
+NOTION_TOKEN_2     = secret_...        (workspace 2)
+NOTION_DATABASE_ID_2 = 4d5e6f...
+```
+
+O site junta as matérias das duas fontes, ordena por data e remove duplicados de mesmo slug.
+
+**Mas eu não recomendo**, por quatro motivos concretos:
+
+1. **moderação vira arqueologia** — para barrar um texto você precisa abrir o Notion de cada pessoa;
+2. **categorias duplicadas** — “Política local” e “política local” viram duas no site;
+3. **imagens em workspaces diferentes** — se alguém sair do projeto, as fotos dele podem cair;
+4. **você depende de 5 integrações e 5 tokens** para manter no ar.
+
+**O caminho recomendado:** um único banco "Matérias", colaboradores como guests, e a aprovação
+feita pelo campo **Status** (abaixo). Todo mundo posta no mesmo lugar, e você libera com um clique.
+
+---
+
+## Travar quem pode publicar (só o dono e 1 pessoa)
+
+Duas camadas, e as duas são simples:
+
+**Camada 1 — convite (a mais importante).** Só entra no banco quem foi convidado. Se o dono convidar
+**uma** pessoa como guest com permissão *Pode editar*, então existem exatamente duas contas capazes de
+criar matérias. Ninguém mais consegue, porque ninguém mais vê a página. É uma decisão de acesso, não
+depende de plano, configuração ou código.
+
+**Camada 2 — trava no servidor (opcional, para garantia).** Se quiser blindagem extra — por exemplo,
+alguém que foi convidado em outro momento e você não lembra —, defina a variável:
+
+```
+NOTION_CRIADORES_PERMITIDOS = "Daniel Soberanis, Nome do Colaborador"
+```
+
+O site compara com quem **criou** cada linha no Notion (nome ou ID de usuário) e **descarta
+silenciosamente** qualquer matéria criada por outra conta, mesmo que esteja como *Publicado*.
+Aceita nomes (sem acento/maiúsculas) ou IDs de usuário do Notion:
+
+```
+NOTION_CRIADORES_PERMITIDOS = "d4e5f6a7-1234-5678-9abc-def012345678, Daniel Soberanis"
+```
+
+Sem essa variável, não há filtro por criador — publica qualquer um que tenha acesso ao banco.
+
+> **Como achar o seu nome no Notion:** abra uma linha que você criou → a propriedade **Criado por**
+> mostra o nome. É exatamente esse texto que vai na lista.
+
+**Resumo da configuração recomendada:**
+
+| Item | Valor |
+|---|---|
+| Membros do workspace | 1 (o dono) |
+| Guests com *Pode editar* | 1 (o colaborador direto) |
+| Guests com *Pode visualizar* | quantos quiser (se algum dia precisar) |
+| `NOTION_CRIADORES_PERMITIDOS` | opcional: nome do dono + nome do colaborador |
+
+---
+## Moderação: o dono audita antes de ir ao ar
+
+Crie a coluna **Status** (tipo *Status* ou *Select*) com três opções:
+
+```
+Rascunho  →  Em revisão  →  Publicado
+```
+
+**O site publica somente o que estiver em `Publicado`.** Qualquer outro valor fica invisível —
+nem no blog, nem na home, nem por link direto.
+
+O fluxo fica assim:
+
+1. Colaborador cria a linha, escreve, sobe a capa e deixa em **Rascunho** (ou **Em revisão**).
+2. Você (dono) recebe, lê, ajusta o que quiser e muda para **Publicado**.
+3. Em até 60 segundos está no ar.
+
+Se a coluna `Status` **não** existir, o site continua aceitando o checkbox **Publicado** — então dá
+para migrar sem pressa. Regras aplicadas pelo código:
+
+| O que está no banco | Vai para o site? |
+|---|---|
+| Status = `Publicado` (aceita `publicada`, `published`, `live`) | ✅ |
+| Status = `Em revisão`, `Rascunho`, `Aprovado`, vazio… | ❌ |
+| Sem coluna Status, checkbox `Publicado` marcado | ✅ |
+| Sem coluna Status, checkbox desmarcado | ❌ |
+| Sem nenhum dos dois (banco simples) | ✅ (comportamento antigo) |
+
+### Autor automático
+
+Ordem de prioridade para a assinatura:
+
+1. campo **Autor** preenchido → assina esse nome;
+2. campo **Autor** vazio, mas existe **Criado por** / **Pessoa** → assina quem criou a linha no Notion;
+3. nenhum dos dois → **Redação Lado Esquerdo de Curitiba**.
+
+Isso elimina erro de digitação de nome quando há muitos colaboradores.
 
 ---
 ## Em 30 segundos (a versão simples)

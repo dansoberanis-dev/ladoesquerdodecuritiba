@@ -14,15 +14,61 @@ const VERSAO = process.env.NOTION_VERSAO_API || '2022-06-28';
 
 export const AUTOR_PADRAO = 'Redação Lado Esquerdo de Curitiba';
 
+/**
+ * Fontes configuradas. Aceita de 1 a 5 pares token+banco:
+ *   NOTION_TOKEN / NOTION_DATABASE_ID
+ *   NOTION_TOKEN_2 / NOTION_DATABASE_ID_2   (opcional)
+ *   ... até _5
+ * Assim é possível somar bancos do mesmo workspace ou de workspaces diferentes
+ * (cada workspace exige a SUA própria integração e o seu próprio token).
+ */
+export function fontes() {
+  const lista = [];
+  const sufixos = ['', '_2', '_3', '_4', '_5'];
+  for (const s of sufixos) {
+    const token = process.env[`NOTION_TOKEN${s}`];
+    const db = process.env[`NOTION_DATABASE_ID${s}`];
+    if (token && db) lista.push({ token, db, indice: s ? Number(s.slice(1)) : 1 });
+  }
+  return lista;
+}
+
 export function configurado() {
-  return Boolean(process.env.NOTION_TOKEN && process.env.NOTION_DATABASE_ID);
+  return fontes().length > 0;
+}
+
+/**
+ * Lista de criadores autorizados a publicar.
+ * NOTION_CRIADORES_PERMITIDOS = "nome ou id, nome ou id"
+ * Vazio/ausente = sem restrição (todos que têm acesso ao banco publicam).
+ * A comparação é por ID de usuário do Notion e por nome (sem acento/maiúsculas).
+ */
+export function criadoresPermitidos() {
+  const bruto = process.env.NOTION_CRIADORES_PERMITIDOS || '';
+  return bruto
+    .split(',')
+    .map((v) => normalizar(v))
+    .filter(Boolean);
+}
+
+function normalizar(t) {
+  return String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+}
+
+/** um post é permitido se não houver lista, ou se o criador estiver nela */
+export function criadorPermitido(post, lista) {
+  if (!lista || !lista.length) return true;
+  const chaves = [normalizar(post.criadoPorId), normalizar(post.criadoPorNome)].filter(Boolean);
+  if (!chaves.length) return false;       // sem informação de criador: não publica
+  return chaves.some((c) => lista.includes(c));
 }
 
 async function notion(caminho, opcoes = {}) {
+  const token = opcoes.token || process.env.NOTION_TOKEN;
   const r = await fetch(`${API}${caminho}`, {
     ...opcoes,
     headers: {
-      Authorization: `Bearer ${process.env.NOTION_TOKEN}`,
+      Authorization: `Bearer ${token}`,
       'Notion-Version': VERSAO,
       'Content-Type': 'application/json',
       ...(opcoes.headers || {}),
@@ -88,10 +134,32 @@ export function mapearPagina(page) {
   const slugBase = textoSimples(prop(p, 'Slug', 'slug'));
   const capa = urlArquivo(prop(p, 'Capa', 'Imagem', 'Imagem de capa', 'Cover', 'Foto')) ||
     (page.cover ? (page.cover.type === 'external' ? page.cover.external.url : page.cover.file?.url) : '');
-  const autor = textoSimples(prop(p, 'Autor', 'Autor(a)', 'Autoria', 'Author', 'Jornalista', 'Assinatura', 'Repórter'));
+  const autorManual = textoSimples(prop(p, 'Autor', 'Autor(a)', 'Autoria', 'Author', 'Jornalista', 'Assinatura', 'Repórter'));
+  // "Criado por" / "Pessoa" preenchem o autor se o campo Autor estiver vazio
+  const autorAutomatico = textoSimples(prop(p, 'Criado por', 'Criado Por', 'Pessoa', 'Autor do Notion', 'Created by'));
+  const autor = autorManual || autorAutomatico || '';
   const publicadoEm = dataDe(prop(p, 'Data', 'Data de publicação', 'Publicado em', 'Data publicação', 'Date'), page.created_time);
-  const publicado = prop(p, 'Publicado', 'Publish', 'Publicar', 'Ativo');
   const destaque = prop(p, 'Destaque', 'Featured', 'Manchete');
+
+  // ---- publicação: Status (select/status) tem prioridade sobre o checkbox ----
+  const statusProp = prop(p, 'Status', 'Situação', 'Situacao', 'Estado', 'Fase', 'Etapa');
+  const statusTexto = textoSimples(statusProp).toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+
+  const checkboxPub = prop(p, 'Publicado', 'Publish', 'Publicar', 'Ativo');
+
+  let publicado;
+  let status = '';
+  if (statusProp) {
+    status = statusTexto;
+    publicado = ['publicado', 'publicada', 'published', 'no ar', 'live'].includes(statusTexto);
+  } else if (checkboxPub) {
+    publicado = checkboxPub.type === 'checkbox' ? Boolean(checkboxPub.checkbox) : true;
+    status = publicado ? 'publicado' : 'rascunho';
+  } else {
+    publicado = true;             // banco sem nenhum controle: publica (comportamento antigo)
+    status = 'publicado';
+  }
 
   return {
     id: page.id,
@@ -103,9 +171,14 @@ export function mapearPagina(page) {
     capaCredito: textoSimples(prop(p, 'Crédito da foto', 'Credito da foto', 'Foto', 'Crédito', 'Credito')),
     data: publicadoEm,
     autor: autor || '',
-    autorPadrao: !autor,
+    autorPadrao: !autorManual,
+    autorOrigem: autorManual ? 'campo' : (autorAutomatico ? 'notion' : 'padrao'),
     destaque: destaque ? Boolean(destaque.checkbox) : false,
-    publicado: publicado ? (publicado.type === 'checkbox' ? Boolean(publicado.checkbox) : true) : true,
+    status,
+    publicado,
+    fonte: page._fonte || 1,
+    criadoPorId: page.created_by?.id || '',
+    criadoPorNome: textoSimples(prop(p, 'Criado por', 'Pessoa', 'Autor do Notion', 'Created by')) || page._criadoPorNome || '',
   };
 }
 
@@ -227,47 +300,100 @@ export function blocosParaHtml(blocos) {
 /* consultas                                                           */
 /* ------------------------------------------------------------------ */
 
-export async function listarPaginas() {
-  const corpo = {
-    page_size: 100,
-    sorts: [{ property: 'Data', direction: 'descending' }],
-  };
+const _cacheUsuarios = new Map();
 
-  let resultados = [];
+async function nomeUsuario(id, token) {
+  if (!id) return '';
+  if (_cacheUsuarios.has(id)) return _cacheUsuarios.get(id);
   try {
-    let resposta = await notion(`/databases/${process.env.NOTION_DATABASE_ID}/query`, {
-      method: 'POST',
-      body: JSON.stringify(corpo),
-    });
-    resultados = resultados.concat(resposta.results);
+    const u = await notion(`/users/${id}`, { method: 'GET', token });
+    const nome = u?.name || u?.person?.email || '';
+    _cacheUsuarios.set(id, nome);
+    return nome;
+  } catch {
+    _cacheUsuarios.set(id, '');
+    return '';
+  }
+}
+
+async function consultarBanco(fonte) {
+  const corpo = { page_size: 100, sorts: [{ property: 'Data', direction: 'descending' }] };
+  const opcoes = { method: 'POST', body: JSON.stringify(corpo), token: fonte.token };
+  let resultados = [];
+
+  try {
+    let resposta = await notion(`/databases/${fonte.db}/query`, opcoes);
+    resultados = resultados.concat(resposta.results || []);
     while (resposta.has_more) {
-      resposta = await notion(`/databases/${process.env.NOTION_DATABASE_ID}/query`, {
-        method: 'POST',
+      resposta = await notion(`/databases/${fonte.db}/query`, {
+        ...opcoes,
         body: JSON.stringify({ ...corpo, start_cursor: resposta.next_cursor }),
       });
-      resultados = resultados.concat(resposta.results);
+      resultados = resultados.concat(resposta.results || []);
     }
   } catch (e) {
-    // se a propriedade "Data" não existir, tenta sem ordenação
-    let resposta = await notion(`/databases/${process.env.NOTION_DATABASE_ID}/query`, {
-      method: 'POST',
-      body: JSON.stringify({ page_size: 100 }),
+    // banco sem a propriedade "Data": consulta sem ordenação
+    const resposta = await notion(`/databases/${fonte.db}/query`, {
+      method: 'POST', body: JSON.stringify({ page_size: 100 }), token: fonte.token,
     });
-    resultados = resposta.results;
+    resultados = resposta.results || [];
   }
 
-  return resultados
-    .map(mapearPagina)
+  const posts = resultados.map((pagina) => {
+    pagina._fonte = fonte.indice;
+    return { pagina, post: mapearPagina(pagina) };
+  });
+
+  // resolve o nome de quem criou (para assinatura automática e para a lista de autorizados)
+  await Promise.all(
+    posts.map(async ({ pagina, post }) => {
+      if (!pagina.created_by?.id) return;
+      const nome = await nomeUsuario(pagina.created_by.id, fonte.token);
+      if (!nome) return;
+      if (!post.criadoPorNome) { post.criadoPorNome = nome; pagina._criadoPorNome = nome; }
+      if (!post.autor) { post.autor = nome; post.autorOrigem = 'notion'; post.autorPadrao = false; }
+    })
+  );
+
+  return posts.map(({ post }) => post);
+}
+
+export async function listarPaginas() {
+  const lista = fontes();
+  if (!lista.length) return [];
+
+  const resultadosPorFonte = await Promise.all(
+    lista.map((fonte) =>
+      consultarBanco(fonte).catch((e) => {
+        console.error(`[notion] fonte ${fonte.indice} falhou: ${e.message}`);
+        return [];
+      })
+    )
+  );
+
+  const todos = resultadosPorFonte.flat();
+
+  // remove duplicados (mesmo slug em bancos diferentes: vence o mais recente)
+  const porSlug = new Map();
+  for (const post of todos) {
+    const anterior = porSlug.get(post.slug);
+    if (!anterior || new Date(post.data) > new Date(anterior.data)) porSlug.set(post.slug, post);
+  }
+
+  const permitidos = criadoresPermitidos();
+
+  return [...porSlug.values()]
     .filter((p) => p.publicado)
+    .filter((p) => criadorPermitido(p, permitidos))
     .sort((a, b) => new Date(b.data) - new Date(a.data));
 }
 
-export async function blocosDaPagina(pageId) {
+export async function blocosDaPagina(pageId, token) {
   let blocos = [];
   let cursor;
   do {
     const q = cursor ? `?page_size=100&start_cursor=${cursor}` : '?page_size=100';
-    const r = await notion(`/blocks/${pageId}/children${q}`);
+    const r = await notion(`/blocks/${pageId}/children${q}`, { token });
     blocos = blocos.concat(r.results || []);
     cursor = r.has_more ? r.next_cursor : undefined;
   } while (cursor);
