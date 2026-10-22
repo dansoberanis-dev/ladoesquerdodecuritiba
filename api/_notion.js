@@ -103,6 +103,7 @@ function textoSimples(p) {
   const lista = p.type === 'title' ? p.title
     : p.type === 'rich_text' ? p.rich_text
     : p.type === 'select' ? (p.select ? [{ plain_text: p.select.name }] : [])
+    : p.type === 'multi_select' ? (p.multi_select || []).slice(0, 1).map((o) => ({ plain_text: o.name }))
     : p.type === 'status' ? (p.status ? [{ plain_text: p.status.name }] : [])
     : p.type === 'people' ? (p.people || []).map((u) => ({ plain_text: u.name || '' }))
     : p.type === 'created_by' ? (p.created_by ? [{ plain_text: p.created_by.name || '' }] : [])
