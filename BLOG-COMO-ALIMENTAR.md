@@ -1,5 +1,91 @@
 # Como alimentar o blog — Notion + Vercel
 
+## Primeira publicação real — a ordem certa (30 a 40 minutos)
+
+### Etapa 1 · Criar o banco no Notion
+1. No Notion: **New page** → **Table – Full page** → nomeie **Matérias**.
+2. Renomeie as colunas (a primeira já vem como *Name* → chame de **Título**):
+
+| Coluna | Tipo |
+|---|---|
+| Título | Title |
+| Slug | Text |
+| Resumo | Text |
+| Categoria | Select |
+| Capa | Files & media |
+| Data | Date |
+| Autor | Text |
+| Publicado | Checkbox |
+| Destaque | Checkbox |
+| Crédito da foto | Text |
+
+3. Nas opções do **Categoria**, cadastre: `Política local`, `Entrevista`, `Mobilidade`, `Direitos humanos`, `Cultura`, `Educação`.
+
+### Etapa 2 · Criar a integração
+1. <https://www.notion.so/my-integrations> → **New integration**.
+2. Nome: `Lado Esquerdo Site` · Workspace: o seu · Type: **Internal**.
+3. Copie o **Internal Integration Secret** (`secret_...`).
+   ⚠️ **Esse valor é uma senha.** Cole direto na Vercel. Não mande por chat, não comite.
+
+### Etapa 3 · Conectar o banco à integração
+1. Abra a página **Matérias** no Notion.
+2. Canto superior direito `•••` → **Connections** → **Connect to** → `Lado Esquerdo Site`.
+3. Confirme. (Sem este passo a API responde 404/500.)
+
+### Etapa 4 · Copiar o ID do banco
+Na URL da página do banco:
+
+```
+https://www.notion.so/SEU-ESPACO/1a2b3c4d5e6f7890abcdef1234567890?v=...
+                                    └────────── este é o DATABASE_ID ──────────┘
+```
+
+32 caracteres, sem os hífens e sem o `?v=`. Este pode ser compartilhado sem risco — ele não dá acesso a nada sozinho.
+
+### Etapa 5 · Variáveis na Vercel
+Projeto → **Settings** → **Environment Variables** → adicione (marque os 3 ambientes):
+
+```
+NOTION_TOKEN       = secret_...
+NOTION_DATABASE_ID = 1a2b3c4d5e6f7890abcdef1234567890
+```
+
+Depois: **Deployments** → no último deploy → `•••` → **Redeploy**. (Variável nova só entra em vigor num deploy novo.)
+
+### Etapa 6 · Conferir
+Abra `https://SEU-SITE.vercel.app/api/posts`:
+
+| Resposta | Significado |
+|---|---|
+| `{"fonte":"notion","total":0,...}` | ✅ funcionando, ainda sem matéria publicada |
+| `501` | faltam as variáveis → refaça a etapa 5 + Redeploy |
+| `500` | banco não conectado à integração → etapa 3 |
+| `404` | `NOTION_DATABASE_ID` errado → etapa 4 |
+
+### Etapa 7 · Publicar o artigo de teste
+1. No banco: **New**.
+2. Preencha: Título, Slug (`teste-notion`), Resumo, Categoria, **Capa** (arraste uma foto), Data = hoje.
+3. Deixe **Autor vazio** (para ver a assinatura padrão).
+4. Marque **Publicado** ✅ e **Destaque** ✅.
+5. Escreva o corpo arrastando uma imagem no meio do texto.
+6. Espere até 60 segundos e recarregue o site.
+
+---
+
+## Os artigos de exemplo saem sozinhos
+
+Não é preciso uma atualização para removê-los. O site consulta o Notion **primeiro**:
+
+| Situação | O que o site mostra |
+|---|---|
+| Notion configurado e com matérias | **só as matérias do Notion** |
+| Notion configurado e vazio | “Nenhuma matéria publicada ainda” |
+| Notion configurado mas com erro | aviso “Não foi possível carregar as matérias agora” — **nunca** matérias fictícias |
+| Notion ainda não configurado | matérias de demonstração **com uma faixa “Prévia”** no topo |
+
+Ou seja: no segundo em que a primeira matéria real for publicada, os exemplos e a faixa de prévia desaparecem.
+
+---
 ## Em 30 segundos (a versão simples)
 
 1. O editor abre o **banco de matérias no Notion** e clica em **New**.

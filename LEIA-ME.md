@@ -119,6 +119,10 @@ preenchido → aparece *Por Nome do Autor*.
 **Enquanto o Notion não está ligado**, o site usa os posts de exemplo de `assets/blog/posts.js` —
 funciona até com duplo clique no `index.html`, sem servidor.
 
+**Faixa de prévia:** enquanto o Notion não estiver ligado, uma tarja avisa que as matérias são de
+demonstração. Assim que a primeira matéria real for publicada no Notion, a tarja e os exemplos
+desaparecem sozinhos. Se a API falhar, o site **não** mostra matérias fictícias.
+
 **Artigo de teste:** abra `artigo.html?slug=artigo-de-teste-veja-como-o-blog-funciona`
 (ou clique no card grande de “Últimas matérias”). Ele existe para você ver exatamente como um post
 publicado aparece. Para removê-lo quando o Notion entrar no ar: apague ou desmarque a caixa

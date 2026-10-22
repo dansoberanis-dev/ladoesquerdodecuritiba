@@ -87,17 +87,28 @@
   function carregar() {
     if (_cache) return Promise.resolve(_cache);
 
-    var tentarApi = location.protocol !== 'file:' &&
-      fetch(CONFIG.apiPosts, { headers: { accept: 'application/json' } })
-        .then(function (r) { if (!r.ok) throw new Error('api ' + r.status); return r.json(); })
+    // 1) Notion (produção). Distingue três casos:
+    //    501 -> API existe mas não configurada  => usa exemplo (mostra aviso de prévia)
+    //    200 -> usa o Notion (mesmo que venha sem matérias publicadas)
+    //    erro -> NÃO usa exemplo: mostra "não foi possível carregar"
+    var tentarApi = null;
+    if (location.protocol !== 'file:') {
+      tentarApi = fetch(CONFIG.apiPosts, { headers: { accept: 'application/json' } })
+        .then(function (r) {
+          // 501 = funções existem mas sem variáveis; 404 = hospedagem sem /api
+          if (r.status === 501 || r.status === 404) return null;   // -> prévia
+          if (!r.ok) throw new Error('api ' + r.status);
+          return r.json();
+        })
         .then(function (j) {
-          if (!j || !j.posts || !j.posts.length) throw new Error('api vazia');
-          j._origem = 'notion';
+          if (!j) return null;
+          j.posts = j.posts || [];
+          j._origem = j.posts.length ? 'notion' : 'notion-vazio';
           return j;
         });
+    }
 
-    // 1º: dados embutidos em posts.js (funciona também abrindo o arquivo direto, sem servidor)
-    // 2º: posts.json (via fetch, quando servido por http)
+    // dados de exemplo: embutidos em posts.js (funciona também abrindo do disco)
     var fallback = function () {
       if (window.POSTS_EXEMPLO && window.POSTS_EXEMPLO.posts && window.POSTS_EXEMPLO.posts.length) {
         var copia = JSON.parse(JSON.stringify(window.POSTS_EXEMPLO));
@@ -111,19 +122,46 @@
 
     if (!tentarApi) { _cache = fallback(); return _cache; }
 
-    _cache = tentarApi['catch'](function () { return fallback(); })
+    _cache = tentarApi
+      .then(function (j) { return j || fallback(); })
+      .catch(function (e) {
+        // API configurada mas quebrou: nunca exibir matérias fictícias
+        console.error('[blog] falha ao carregar do Notion', e);
+        return { posts: [], _origem: 'erro' };
+      })
       .then(function (j) {
         j.posts = (j.posts || []).slice().sort(function (a, b) {
           return new Date(b.data) - new Date(a.data);
         });
+        avisoDeOrigem(j._origem);
         return j;
-      })
-      .catch(function (e) {
-        console.error('[blog] nao foi possivel carregar as materias', e);
-        return { posts: [], _origem: 'erro' };
       });
 
     return _cache;
+  }
+
+  /* aviso discreto quando o site está exibindo dados de exemplo */
+  function avisoDeOrigem(origem) {
+    if (origem !== 'exemplo' || location.protocol === 'file:') return;
+    if (document.getElementById('avisoPrevia')) return;
+    var el = document.createElement('div');
+    el.id = 'avisoPrevia';
+    el.className = 'aviso-previa';
+    el.innerHTML = '<strong>Prévia</strong> · estas são matérias de demonstração. ' +
+      'Depois de ligar o Notion, o conteúdo real substitui esta lista automaticamente.';
+    var main = document.querySelector('main') || document.body;
+    main.insertBefore(el, main.firstChild);
+  }
+
+  function avisoDeErro(texto) {
+    var el = document.getElementById('avisoErro');
+    if (el) { el.textContent = texto; return; }
+    var div = document.createElement('div');
+    div.id = 'avisoErro';
+    div.className = 'aviso-previa aviso-erro';
+    div.textContent = texto;
+    var main = document.querySelector('main') || document.body;
+    main.insertBefore(div, main.firstChild);
   }
 
   /* ---------------- cartões ---------------- */
@@ -197,7 +235,11 @@
 
     carregar().then(function (dados) {
       var posts = dados.posts || [];
-      if (!posts.length) return;
+      if (!posts.length) {
+        var secao = document.getElementById('blog');
+        if (secao && dados._origem === 'notion-vazio') secao.hidden = true;
+        return;
+      }
 
       var destaque = posts.filter(function (p) { return p.destaque; })[0] || posts[0];
       var resto = posts.filter(function (p) { return p.slug !== destaque.slug; }).slice(0, 2);
@@ -238,6 +280,22 @@
 
     carregar().then(function (dados) {
       var posts = dados.posts || [];
+
+      if (dados._origem === 'erro') {
+        avisoDeErro('Não foi possível carregar as matérias agora. Tente recarregar a página em instantes.');
+        contador.textContent = 'Indisponível';
+        vazio.hidden = true;
+        return;
+      }
+
+      if (dados._origem === 'notion-vazio') {
+        contador.textContent = '0 matérias';
+        vazio.hidden = false;
+        vazio.querySelector('h3').textContent = 'Nenhuma matéria publicada ainda';
+        vazio.querySelector('p').textContent = 'Assim que a primeira matéria for marcada como “Publicado” no Notion, ela aparece aqui.';
+        btnLimpar.style.display = 'none';
+        return;
+      }
 
       /* selects de mês, ano e categoria montados a partir do que existe */
       var anos = {}, meses = {}, cats = {};
