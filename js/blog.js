@@ -181,7 +181,7 @@
     return '' +
       '<a href="' + linkPost(p) + '" class="card reveal destaque-card">' +
         '<div class="destaque-fundo">' +
-          '<div class="ph" style="background-image:url(\'' + esc(p.capa || '') + '\')"></div>' +
+          '<div class="ph' + (p.capa ? '' : ' sem-capa') + '"' + (p.capa ? ' style="background-image:url(\'' + esc(p.capa) + '\')"' : '') + '></div>' +
           '<div class="destaque-veu"></div>' +
         '</div>' +
         '<div class="destaque-texto">' +
@@ -197,7 +197,7 @@
     return '' +
       '<a href="' + linkPost(p) + '" class="card reveal" style="animation-delay:' + (atraso || 0) + 's">' +
         '<div class="thumb" style="aspect-ratio:16/9">' +
-          '<div class="ph" style="background-image:url(\'' + esc(p.capa || '') + '\')"></div>' +
+          '<div class="ph' + (p.capa ? '' : ' sem-capa') + '"' + (p.capa ? ' style="background-image:url(\'' + esc(p.capa) + '\')"' : '') + '></div>' +
           '<div class="thumb-veu"></div>' +
           (p.categoria ? '<span class="badge badge-flutuante">' + esc(p.categoria) + '</span>' : '') +
         '</div>' +
@@ -214,7 +214,7 @@
     return '' +
       '<a href="' + linkPost(p) + '" class="card card-grade">' +
         '<div class="thumb" style="aspect-ratio:16/10">' +
-          '<div class="ph" style="background-image:url(\'' + esc(p.capa || '') + '\')"></div>' +
+          '<div class="ph' + (p.capa ? '' : ' sem-capa') + '"' + (p.capa ? ' style="background-image:url(\'' + esc(p.capa) + '\')"' : '') + '></div>' +
           '<div class="thumb-veu"></div>' +
         '</div>' +
         '<div class="card-corpo">' +
@@ -225,6 +225,11 @@
             (min ? ' · ' + min + ' min' : '') + '</p>' +
         '</div>' +
       '</a>';
+  }
+
+  /* os cards chegam depois do IntersectionObserver: revelar na mão */
+  function revelar(raiz) {
+    raiz.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in'); });
   }
 
   /* ---------------- home ---------------- */
@@ -247,6 +252,7 @@
       if (!resto.length) {
         alvo.innerHTML = cardDestaque(destaque);
         alvo.style.gridTemplateColumns = '1fr';
+        revelar(alvo);
         return;
       }
 
@@ -255,7 +261,7 @@
         resto.map(function (p, i) { return cardVertical(p, .05 * (i + 1)); }).join('') +
         '</div>';
 
-      alvo.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in'); });
+      revelar(alvo);
     });
   }
 
