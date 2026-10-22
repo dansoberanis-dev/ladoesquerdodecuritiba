@@ -179,7 +179,7 @@
   function cardDestaque(p) {
     var min = p.minutos || minutos(p.corpo, p.resumo);
     return '' +
-      '<a href="' + linkPost(p) + '" class="card reveal destaque-card">' +
+      '<a href="' + linkPost(p) + '" class="card reveal destaque-card' + (p.capa ? '' : ' sem-capa') + '">' +
         '<div class="destaque-fundo">' +
           '<div class="ph' + (p.capa ? '' : ' sem-capa') + '"' + (p.capa ? ' style="background-image:url(\'' + esc(p.capa) + '\')"' : '') + '></div>' +
           '<div class="destaque-veu"></div>' +
