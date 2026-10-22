@@ -383,14 +383,17 @@ async function consultarBanco(fonte) {
   return posts.map(({ post }) => post);
 }
 
-export async function listarPaginas() {
+export async function listarComEstado() {
   const lista = fontes();
-  if (!lista.length) return [];
+  if (!lista.length) return { posts: [], falhas: [], ok: [] };
+
+  const falhas = [];
 
   const resultadosPorFonte = await Promise.all(
     lista.map((fonte) =>
       consultarBanco(fonte).catch((e) => {
         console.error(`[notion] fonte ${fonte.indice} falhou: ${e.message}`);
+        falhas.push({ fonte: fonte.indice, erro: String(e.message || e).slice(0, 160) });
         return [];
       })
     )
@@ -407,10 +410,19 @@ export async function listarPaginas() {
 
   const permitidos = criadoresPermitidos();
 
-  return [...porSlug.values()]
+  const posts = [...porSlug.values()]
     .filter((p) => p.publicado)
     .filter((p) => criadorPermitido(p, permitidos))
     .sort((a, b) => new Date(b.data) - new Date(a.data));
+
+  const ok = lista.map((f) => f.indice).filter((i) => !falhas.some((f) => f.fonte === i));
+  return { posts, falhas, ok };
+}
+
+/** Compatibilidade: só a lista. */
+export async function listarPaginas() {
+  const { posts } = await listarComEstado();
+  return posts;
 }
 
 export async function blocosDaPagina(pageId, token) {

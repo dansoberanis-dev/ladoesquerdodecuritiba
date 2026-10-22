@@ -1,0 +1,66 @@
+name: Acervo do blog
+
+# Espelha no repositório TUDO que está publicado no Notion: textos, capas e
+# imagens do corpo. O Notion decide o que fica no ar; o git guarda o material
+# (e as imagens) para que o site nunca dependa dele estar disponível.
+
+on:
+  schedule:
+    - cron: '0 */3 * * *'   # a cada 3 horas (UTC)
+  workflow_dispatch:        # permite rodar na mão pela aba Actions
+
+permissions:
+  contents: write
+
+concurrency:
+  group: acervo
+  cancel-in-progress: false
+
+jobs:
+  espelhar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Espelhar Notion no repositório
+        run: node scripts/sincronizar.mjs https://ladoesquerdodecuritiba.vercel.app
+
+      - name: Compactar imagens muito grandes (opcional, nunca falha o fluxo)
+        continue-on-error: true
+        run: |
+          pip install --quiet Pillow
+          python3 - <<'PY'
+          import glob, os
+          from PIL import Image
+          limite = 400 * 1024          # só mexe em arquivos acima de 400 KB
+          largura = 1600
+          for f in glob.glob('conteudo/img/**/*.*', recursive=True):
+              if os.path.getsize(f) <= limite: continue
+              try:
+                  im = Image.open(f); im.load()
+                  if im.width > largura:
+                      im = im.resize((largura, round(im.height * largura / im.width)), Image.LANCZOS)
+                  if f.lower().endswith(('.jpg','.jpeg')):
+                      im.convert('RGB').save(f, 'JPEG', quality=82, optimize=True)
+                  elif f.lower().endswith('.png') and im.mode in ('RGBA','LA','P'):
+                      im.save(f, 'PNG', optimize=True)
+                  print('compactado:', f, os.path.getsize(f)//1024, 'KB')
+              except Exception as e:
+                  print('ignorado:', f, e)
+          PY
+
+      - name: Gravar no repositório
+        run: |
+          git config user.name "Acervo do blog"
+          git config user.email "actions@users.noreply.github.com"
+          git add conteudo
+          if git diff --staged --quiet; then
+            echo "Acervo já estava atualizado."
+          else
+            git commit -m "acervo: espelho do Notion ($(date -u '+%d/%m/%Y %H:%M'))"
+            git push
+          fi

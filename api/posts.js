@@ -3,7 +3,7 @@
  * Lista as matérias publicadas (Notion).
  * Sem tokens configurados devolve 501 e o site usa o JSON de exemplo.
  */
-import { configurado, listarPaginas } from './_notion.js';
+import { configurado, listarComEstado } from './_notion.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -18,12 +18,16 @@ export default async function handler(req, res) {
   }
 
   try {
-    const posts = await listarPaginas();
+    const { posts, falhas, ok } = await listarComEstado();
     res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
     res.status(200).json({
       fonte: 'notion',
       atualizadoEm: new Date().toISOString(),
       total: posts.length,
+      // fontes que responderam e fontes que falharam: o site completa as que
+      // falharam com o retrato guardado em dados/cache-notion.json
+      fontesOk: ok,
+      fontesFalhas: falhas,
       posts: posts.map(({ id, ...resto }) => resto),
     });
   } catch (e) {

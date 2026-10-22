@@ -1,7 +1,7 @@
 # PROMPT MASTER — Lado Esquerdo de Curitiba (site + blog)
 
 > Documento de retomada. Serve para você voltar ao projeto depois de meses, ou para entregar a outro assistente/desenvolvedor e continuar exatamente de onde paramos.
-> Última atualização: **22/10/2026 — versão 2.9.0**
+> Última atualização: **22/10/2026 — versão 3.0.0**
 
 ---
 
@@ -43,8 +43,9 @@ api/_notion.js        ← núcleo: listar páginas, mapear campos, converter blo
         ▼
 js/blog.js            ← renderiza home (manchete + laterais), listagem (busca/filtros) e artigo
         │
-        ├── dados/posts.json  ← modo de emergência (publicação sem Notion)
-        └── assets/blog/posts.json ← matérias de exemplo (prévia offline)
+        ├── conteudo/posts.json      ← ACERVO: texto de todas as matérias (+ imagens locais)
+        ├── conteudo/img/<slug>/     ← imagens baixadas do Notion (nunca expiram)
+        └── assets/blog/posts.json   ← matérias de exemplo (prévia offline)
         │
         ▼
 middleware.js         ← injeta og:title/og:description/og:image no HTML de /artigo?slug=...
@@ -86,7 +87,8 @@ SITEARENA/
 ├── api/posts.js          GET /api/posts
 ├── api/post.js           GET /api/post?slug=
 ├── middleware.js         metas og dinâmicas por matéria
-├── dados/posts.json      publicação de emergência (vazio por padrão)
+├── conteudo/             ACERVO: posts.json + imagens (mantido pelo GitHub Actions)
+├── scripts/sincronizar.mjs  espelha Notion → acervo (textos e imagens)
 ├── assets/img/           logo, chama, favicon, og-padrao.jpg, imagens de exemplo
 ├── assets/blog/          posts.json e posts.js de exemplo
 ├── docs/                 manuais (editor, alimentação, publicação sem Notion)
@@ -148,39 +150,31 @@ Matéria sem capa recebe um fundo de fogo com a chama da marca (nunca um retâng
 
 ---
 
-## 9. Publicação de emergência (sem Notion)
+## 9. O acervo (git manda no armazenamento, Notion manda no ar)
 
-Arquivo **`dados/posts.json`**. O site soma esse arquivo ao conteúdo do Notion:
+Regra: **o Notion decide o que está no ar; o repositório guarda tudo — textos e imagens.**
 
-1. Se o slug já veio do Notion, o item do arquivo é ignorado (Notion manda).
-2. Se o Notion estiver vazio/fora e houver itens no arquivo, a lista do arquivo aparece (sem tarja de prévia).
-3. Se as duas fontes falharem, o site mostra "não foi possível carregar" — **nunca** matérias fictícias.
-
-Formato do item:
-
-```json
-{
-  "slug": "nota-da-redacao",
-  "titulo": "Nota da redação",
-  "resumo": "Resumo que aparece no card.",
-  "categoria": "Nota",
-  "capa": "assets/img/blog/foto.jpg",
-  "capaCredito": "Nome do fotógrafo",
-  "data": "2026-10-22",
-  "autor": "",
-  "destaque": false,
-  "corpo": "<p>Texto.</p><h2>Subtítulo</h2><p>Mais texto.</p><figure><img src=\"assets/img/blog/foto2.jpg\" alt=\"\"><figcaption>Legenda</figcaption></figure>"
-}
+```
+conteudo/posts.json              todas as matérias (publicado: true/false) + corpo com caminhos locais
+conteudo/img/<slug>/capa.*       imagem de capa baixada do Notion
+conteudo/img/<slug>/corpo-N.*    imagens do corpo do texto
 ```
 
-Passo a passo completo em **`docs/PUBLICAR-SEM-NOTION.md`**.
+- `scripts/sincronizar.mjs` mantém o acervo; `.github/workflows/acervo.yml` roda **a cada 3 horas** (e na mão, aba Actions).
+- O site combina Notion + acervo: Notion íntegro → ele manda (mas texto/imagens vêm do acervo); fonte fora → completa com o acervo; Notion inteiro fora → acervo inteiro.
+- **Travas:** todas as fontes fora → nada muda; uma fonte fora → só cresce, nada despublicado; matéria removida do Notion com fontes OK → `publicado:false` (fica no git); corpo vazio/trocado → mantém o do acervo.
+- **Matérias manuais** (`"origem": "manual"`) nunca são tocadas pela sincronização — é a publicação de emergência, agora com imagens locais.
+- `conteudo/` **fica fora do ZIP** de atualização (quem manda nela é o robô).
+- Detalhes em **`docs/ACERVO-E-IMAGENS.md`**.
+
+**Consequência no fluxo de entrega:** o GitHub Actions faz commits, então o bloco PowerShell precisa de `git fetch` + `git pull --rebase` antes do `push`.
 
 ---
 
 ## 10. Fluxo de entrega (o que se combinou com o dono)
 
 1. Toda mudança vira um **ZIP cumulativo** na raiz do workspace: `SITEARENA-vNN.zip` (**só o mais recente fica**; os antigos são apagados).
-2. Cada entrega vem com **um único bloco PowerShell**: `Expand-Archive` → valida `index.html` → `robocopy` para `E:\SITES\LADOESQ\SITEARENA` → `git add -A` → commit → `git push`.
+2. Cada entrega vem com **um único bloco PowerShell**: `Expand-Archive` → valida `index.html` → `robocopy` para `E:\SITES\LADOESQ\SITEARENA` → `git add -A` → commit → **`git fetch` + `git pull --rebase`** → `git push`.
 3. A Vercel builda sozinha a partir do push. Conferência é **online, depois do deploy** (não é preciso rodar localmente).
 4. **Auditoria antes de publicar é obrigatória**: sintaxe, comportamento nos quatro cenários de layout, mobile e desktop, e checagem do que foi ao ar.
 5. Bump de versão: `VERSION`, `package.json` e o selo de cache `?v=NNN` em `css/blog.css` e `js/blog.js` nos três HTMLs.
@@ -218,7 +212,7 @@ Depois de mexer em variáveis: **redeploy obrigatório**. Na UI nova: Settings �
 
 ## 13. Estado atual (22/10/2026)
 
-**Funcionando em produção:** home, blog com busca/filtros/ordenação, artigo com capa, subtítulo, lista, citação e imagens com legenda; prévia de link com capa por matéria; publicação pelo Notion (Status = Publicado); autor padrão "Redação Lado Esquerdo de Curitiba"; modo de emergência por `dados/posts.json`.
+**Funcionando em produção:** home, blog com busca/filtros/ordenação, artigo com capa, subtítulo, lista, citação e imagens com legenda; prévia de link com capa por matéria; publicação pelo Notion (Status = Publicado); autor padrão "Redação Lado Esquerdo de Curitiba"; **acervo em git com imagens locais** (site não depende do Notion para exibir).
 
 **Conteúdo de teste em produção:** TESTE2, TESTE3 e "Teste de integração" (apagar quando o site entrar no ar de verdade).
 
@@ -228,6 +222,7 @@ Depois de mexer em variáveis: **redeploy obrigatório**. Na UI nova: Settings �
 3. Instagram automático — hoje é link fixo no HTML.
 4. Substituir matérias de teste por conteúdo real e revisar textos institucionais.
 5. Avaliar capa de matéria gerada automaticamente para quem não tem foto.
+6. Se o repositório crescer muito (imagens), avaliar armazenamento de imagens próprio.
 
 ---
 

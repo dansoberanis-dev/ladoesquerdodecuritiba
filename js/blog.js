@@ -15,7 +15,7 @@
     apiPost: '/api/post',
     fallback: 'assets/blog/posts.json',
     fallbackJs: 'assets/blog/posts.js',
-    arquivoLocal: 'dados/posts.json',
+    acervo: 'conteudo/posts.json',
     destaqueNaHome: 3,
     topoDaListagem: 1
   };
@@ -87,35 +87,58 @@
 
   function porData(a, b) { return new Date(b.data) - new Date(a.data); }
 
-  /* arquivo local (dados/posts.json) — usado quando o Notion está fora do ar,
-     vazio, ou quando a redação publica por git em modo de emergência */
-  function carregarArquivo() {
-    if (location.protocol === 'file:') {
-      return Promise.resolve({ posts: [] });
-    }
-    return fetch(CONFIG.arquivoLocal + '?t=' + Date.now(), { headers: { accept: 'application/json' } })
-      .then(function (r) { if (!r.ok) throw new Error('arquivo ' + r.status); return r.json(); })
-      .then(function (j) { return { posts: (j && j.posts) || [] }; })
-      ['catch'](function () { return { posts: [] }; });
+  /* acervo guardado no git (conteudo/posts.json) — texto e imagens locais.
+     É o que mantém o blog no ar quando o Notion não responde. */
+  function carregarAcervo() {
+    if (location.protocol === 'file:') return Promise.resolve([]);
+    return fetch(CONFIG.acervo + '?t=' + Date.now(), { headers: { accept: 'application/json' } })
+      .then(function (r) { if (!r.ok) throw new Error('acervo ' + r.status); return r.json(); })
+      .then(function (j) {
+        return ((j && j.posts) || []).filter(function (p) { return p && p.slug && p.publicado !== false; });
+      })
+      ['catch'](function () { return []; });
   }
 
-  /* junta as duas fontes: o Notion manda; o arquivo entra só com o que falta */
-  function juntar(notion, arquivo) {
-    var base = (notion || []).slice();
-    var vistos = {};
-    base.forEach(function (p) { vistos[p.slug] = true; });
-    var extras = (arquivo || []).filter(function (p) {
-      if (!p || !p.slug || vistos[p.slug]) return false;
-      vistos[p.slug] = true;
-      return true;
-    }).map(function (p) {
-      var copia = JSON.parse(JSON.stringify(p));
-      copia.arquivoLocal = true;
-      copia.status = copia.status || 'publicado';
-      copia.publicado = true;
-      return copia;
+  /* combina o que veio do Notion com o acervo:
+     - Notion completo (todas as fontes OK): ele manda; o acervo só empresta
+       texto e imagens locais das matérias que ele mesmo listou.
+     - alguma fonte fora: soma o acervo (nada desaparece do site).
+     - Notion inteiro fora: mostra o acervo inteiro. */
+  function combinar(daApi, acervo, apiOk, temFonteFora) {
+    var porSlugAcervo = {};
+    (acervo || []).forEach(function (p) { porSlugAcervo[p.slug] = p; });
+
+    if (!apiOk) {
+      return (acervo || []).map(function (p) {
+        var copia = JSON.parse(JSON.stringify(p));
+        copia.doAcervo = true;
+        return copia;
+      });
+    }
+
+    var lista = (daApi || []).map(function (p) {
+      var local = porSlugAcervo[p.slug];
+      if (!local) return p;
+      var junto = Object.assign({}, p);
+      if (local.corpo) junto.corpo = local.corpo;
+      if (local.capa && String(local.capa).indexOf('conteudo/') === 0) junto.capa = local.capa;
+      if (local.capaCredito) junto.capaCredito = local.capaCredito;
+      junto.doAcervo = true;
+      return junto;
     });
-    return { posts: base.concat(extras), extras: extras.length };
+
+    if (!temFonteFora) return lista; // Notion íntegro: ele é a autoridade
+
+    var vistos = {};
+    lista.forEach(function (p) { vistos[p.slug] = true; });
+    (acervo || []).forEach(function (p) {
+      if (vistos[p.slug]) return;
+      vistos[p.slug] = true;
+      var copia = JSON.parse(JSON.stringify(p));
+      copia.doAcervo = true;
+      lista.push(copia);
+    });
+    return lista;
   }
 
   function carregar() {
@@ -159,21 +182,29 @@
     _cache = tentarApi
       .then(function (j) { return j || fallback(); })
       .catch(function (e) {
-        // API configurada mas quebrou: nunca exibir matérias fictícias
+        // API quebrou: quem assume é o acervo guardado no git
         console.error('[blog] falha ao carregar do Notion', e);
         return { posts: [], _origem: 'erro' };
       })
       .then(function (j) {
-        // o arquivo local só entra quando não estamos exibindo matérias de exemplo
-        if (j._origem === 'exemplo') {
-          j.posts = (j.posts || []).slice().sort(porData);
-          avisoDeOrigem(j._origem);
-          return j;
-        }
-        return carregarArquivo().then(function (arq) {
-          var junto = juntar(j.posts, arq.posts);
-          j.posts = junto.posts.sort(porData);
-          if (junto.extras) j._origem = (j._origem === 'notion' ? 'notion+arquivo' : 'arquivo');
+        if (j._origem === 'exemplo') { j.posts = (j.posts || []).slice().sort(porData); avisoDeOrigem(j._origem); return j; }
+
+        var apiOk = (j._origem === 'notion' || j._origem === 'notion-vazio');
+        var temFonteFora = !!(j.fontesFalhas && j.fontesFalhas.length);
+
+        return carregarAcervo().then(function (acervo) {
+          j.posts = combinar(j.posts, acervo, apiOk, temFonteFora);
+
+          // havia fonte fora, mas o acervo cobriu: não é "site vazio"
+          if (j._origem === 'notion-vazio' && j.posts.length) j._origem = 'notion';
+
+          if (!apiOk) {
+            // Notion fora do ar: o acervo mantém o site de pé
+            j._origem = j.posts.length ? 'acervo' : 'erro';
+            if (j.posts.length) console.warn('[blog] Notion indisponível: exibindo o acervo (' + j.posts.length + ' matéria[s])');
+          }
+
+          j.posts = j.posts.slice().sort(porData);
           avisoDeOrigem(j._origem);
           return j;
         });
@@ -449,8 +480,10 @@
       var lista = dados.posts || [];
       var post = lista.filter(function (p) { return p.slug === slug; })[0];
 
-      // tenta o corpo completo pela API (Notion); senão usa o do JSON
-      var promessaCorpo = (location.protocol !== 'file:')
+      // se o acervo já tem o corpo (com imagens locais), usa ele;
+      // senão busca o corpo completo no Notion
+      var promessaCorpo = (post && post.corpo) ? Promise.resolve(null)
+        : (location.protocol !== 'file:')
         ? fetch(CONFIG.apiPost + '?slug=' + encodeURIComponent(slug))
             .then(function (r) { if (!r.ok) throw new Error('sem api'); return r.json(); })
             .then(function (j) {
