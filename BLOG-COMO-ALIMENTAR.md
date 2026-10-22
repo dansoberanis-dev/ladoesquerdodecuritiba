@@ -211,8 +211,12 @@ para migrar sem pressa. Regras aplicadas pelo código:
 Ordem de prioridade para a assinatura:
 
 1. campo **Autor** preenchido → assina esse nome;
-2. campo **Autor** vazio, mas existe **Criado por** / **Pessoa** → assina quem criou a linha no Notion;
-3. nenhum dos dois → **Redação Lado Esquerdo de Curitiba**.
+2. campo **Autor** vazio e a variável `NOTION_AUTOR_AUTOMATICO=true` → assina quem criou a linha no Notion *(desligado por padrão)*;
+3. nenhum dos dois (ou variável desligada) → **Redação Lado Esquerdo de Curitiba**.
+
+> Por que o padrão é desligado: sem ele, toda matéria sem autor assinada sairia com o nome da
+> **conta do Notion** de quem criou a linha (ex.: “Por DAN SOBERANIS”). Para um site jornalístico,
+> o padrão “Redação Lado Esquerdo de Curitiba” é quase sempre o desejado.
 
 Isso elimina erro de digitação de nome quando há muitos colaboradores.
 

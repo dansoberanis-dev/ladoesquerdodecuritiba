@@ -121,6 +121,16 @@ function urlArquivo(p) {
   return (f.type === 'external' ? f.external?.url : f.file?.url) || '';
 }
 
+function slugDe(texto) {
+  return String(texto || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 70)
+    .replace(/-+$/g, '');
+}
+
 function dataDe(p, fallback) {
   if (p && p.type === 'date' && p.date) return p.date.start;
   if (p && p.type === 'created_time' && p.created_time) return p.created_time;
@@ -137,7 +147,12 @@ export function mapearPagina(page) {
     (page.cover ? (page.cover.type === 'external' ? page.cover.external.url : page.cover.file?.url) : '');
   const autorManual = textoSimples(prop(p, 'Autor', 'Autor(a)', 'Autoria', 'Author', 'Jornalista', 'Assinatura', 'Repórter'));
   // "Criado por" / "Pessoa" preenchem o autor se o campo Autor estiver vazio
-  const autorAutomatico = textoSimples(prop(p, 'Criado por', 'Criado Por', 'Pessoa', 'Autor do Notion', 'Created by'));
+  const usarAutorAutomatico = ['1', 'true', 'sim', 'yes'].includes(
+    String(process.env.NOTION_AUTOR_AUTOMATICO || '').toLowerCase()
+  );
+  const autorAutomatico = usarAutorAutomatico
+    ? textoSimples(prop(p, 'Criado por', 'Criado Por', 'Pessoa', 'Autor do Notion', 'Created by'))
+    : '';
   const autor = autorManual || autorAutomatico || '';
   const publicadoEm = dataDe(prop(p, 'Data', 'Data de publicação', 'Publicado em', 'Data publicação', 'Date'), page.created_time);
   const destaque = prop(p, 'Destaque', 'Featured', 'Manchete');
@@ -164,7 +179,7 @@ export function mapearPagina(page) {
 
   return {
     id: page.id,
-    slug: slugBase || page.id.replace(/-/g, '').slice(0, 12),
+    slug: slugBase || slugDe(titulo) || page.id.replace(/-/g, '').slice(0, 12),
     titulo,
     resumo: textoSimples(prop(p, 'Resumo', 'Descrição', 'Descricao', 'Linha fina', 'Subtítulo', 'Summary')),
     categoria: textoSimples(prop(p, 'Categoria', 'Editoria', 'Seção', 'Secao', 'Category')) || 'Matéria',
@@ -352,7 +367,8 @@ async function consultarBanco(fonte) {
       const nome = await nomeUsuario(pagina.created_by.id, fonte.token);
       if (!nome) return;
       if (!post.criadoPorNome) { post.criadoPorNome = nome; pagina._criadoPorNome = nome; }
-      if (!post.autor) { post.autor = nome; post.autorOrigem = 'notion'; post.autorPadrao = false; }
+      const autorAuto = ['1', 'true', 'sim', 'yes'].includes(String(process.env.NOTION_AUTOR_AUTOMATICO || '').toLowerCase());
+      if (autorAuto && !post.autor) { post.autor = nome; post.autorOrigem = 'notion'; post.autorPadrao = false; }
     })
   );
 
