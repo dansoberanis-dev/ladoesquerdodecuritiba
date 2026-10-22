@@ -1,0 +1,85 @@
+-- =====================================================================
+--  1) RODE ESTE BLOCO NO SEU NOTION  (em uma página vazia, tipo "Codes")
+--     Ele cria uma tabela já com as colunas certas e um artigo de teste.
+--     Só o título "Matérias" precisa ser criado depois como tabela.
+-- =====================================================================
+
+Propriedades da tabela (crie a tabela e depois cole estas colunas):
+
+Título           → Title
+Slug             → Text
+Resumo           → Text
+Categoria        → Select        (opções: Política local, Entrevista, Mobilidade, Direitos humanos, Cultura, Educação, Teste)
+Capa             → Files & media
+Data             → Date
+Autor            → Text          (vazio = Redação Lado Esquerdo de Curitiba)
+Publicado        → Checkbox
+Destaque         → Checkbox
+Crédito da foto  → Text
+
+-- =====================================================================
+--  2) O ARTIGO DE TESTE — cole no corpo da página
+-- =====================================================================
+
+Campos:
+  Título    : Artigo de teste: é assim que uma matéria publicada aparece no site
+  Slug      : artigo-de-teste-veja-como-o-blog-funciona
+  Resumo    : Este card foi montado automaticamente a partir dos campos de uma matéria (categoria, imagem, resumo e data).
+  Categoria : Teste
+  Capa      : (arraste uma foto)
+  Data      : hoje
+  Autor     : (deixe VAZIO para ver a assinatura padrão)
+  Publicado : ☑
+  Destaque  : ☑
+
+Corpo (copie e cole, depois arraste a foto entre os parágrafos):
+
+  Se você está lendo isto, o caminho inteiro funcionou: os campos de uma matéria
+  foram lidos e o site montou sozinho o card da página inicial, o card da
+  listagem e esta página.
+
+  O QUE O EDITOR PREENCHE
+  Título — vira o título grande
+  Categoria — vira o selo laranja acima do título
+  Capa — vira a imagem do card e do topo da matéria
+  Resumo — vira a linha fina abaixo do título
+  Data — define a ordem (mais nova primeiro)
+  Autor — se ficar vazio, assina a Redação
+
+  [ARRASTE UMA FOTO AQUI]
+  (clique na foto → Add a caption → escreva a legenda)
+
+  IMAGENS NO MEIO DO TEXTO
+  No Notion, o editor simplesmente arrasta a foto para o ponto exato do texto.
+  Ela sai aqui formatada, com legenda, sem ninguém precisar mexer em código.
+
+  > Tudo o que você vê nesta página veio de campos preenchidos, não de HTML escrito à mão.
+
+  Quando o Notion estiver conectado, este mesmo resultado acontece com o que você
+  escrever lá — sem precisar pedir uma nova versão do site para mim.
+
+-- =====================================================================
+--  3) DEPOIS QUE O NOTION ESTIVER CONECTADO
+--     (esta linha serve para testar a API e é publicado no site publicado)
+-- =====================================================================
+
+Abrir no navegador:   https://SEU-SITE.vercel.app/api/posts
+Resultado esperado:   {"fonte":"notion","total":8,"posts":[...]}
+
+Se voltar:
+  501  → faltam NOTION_TOKEN / NOTION_DATABASE_ID nas variáveis da Vercel
+  500  → a integração não foi conectada ao banco (••• → Connections)
+  404  → NOTION_DATABASE_ID errado
+
+-- =====================================================================
+--  4) CHECKLIST DE PUBLICAÇÃO (Notion → Vercel → site)
+-- =====================================================================
+
+[ ] Integração criada em notion.so/my-integrations  (secret_...)
+[ ] Banco conectado: ••• → Connections → Connect to → nome da integração
+[ ] ID do banco copiado da URL (32 caracteres antes do "?v=")
+[ ] Variáveis na Vercel: NOTION_TOKEN e NOTION_DATABASE_ID
+[ ] Redeploy feito
+[ ] /api/posts devolvendo "fonte":"notion"
+[ ] Primeira matéria marcada como "Publicado"
+[ ] Site atualizado em até 60 segundos

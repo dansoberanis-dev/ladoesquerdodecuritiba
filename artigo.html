@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Matéria — Lado Esquerdo de Curitiba</title>
+<meta name="description" content="Matéria do Lado Esquerdo de Curitiba."/>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="Matéria — Lado Esquerdo de Curitiba"/>
+<meta property="og:description" content="Matéria do Lado Esquerdo de Curitiba."/>
+<meta property="og:image" content="assets/img/logo-completa.webp"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="theme-color" content="#120c0a"/>
+<meta name="robots" content="noindex, nofollow"/>
+<link rel="icon" type="image/png" href="assets/img/favicon.png"/>
+<link rel="apple-touch-icon" href="assets/img/favicon.png"/>
+<link rel="stylesheet" href="css/estilos.css"/>
+<link rel="stylesheet" href="css/blog.css"/>
+</head>
+<body>
+<header id="siteHeader">
+  <div class="bar">
+    <a class="brand" href="index.html" aria-label="Lado Esquerdo de Curitiba — início">
+      <img class="icone" src="assets/img/chama.webp" alt=""/>
+      <img class="lettering" src="assets/img/logo-texto.webp" alt="Lado Esquerdo de Curitiba"/>
+    </a>
+    <nav class="nav-desktop" aria-label="Navegação principal">
+      <a href="index.html">Início</a>
+      <a href="blog.html">Blog</a>
+      <a href="index.html#projeto">O Projeto</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobileMenu">
+      <svg class="ico-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      <svg class="ico-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- MENU MOBILE (sanfona) -->
+<div class="mm-backdrop" id="mmBackdrop" hidden></div>
+<div class="mobile-menu" id="mobileMenu" hidden>
+  <nav aria-label="Navegação mobile">
+    <a href="index.html"><span>01</span>Início</a>
+    <a href="blog.html"><span>02</span>Blog</a>
+    <a href="index.html#projeto"><span>03</span>O Projeto</a>
+  </nav>
+  <a class="btn-fire" href="blog.html" style="margin-top:26px;justify-content:center">Ler matérias
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </a>
+  <div class="mm-social">
+    <a href="https://www.instagram.com/ladoesquerdodecuritiba/" target="_blank" rel="noopener noreferrer">Instagram</a>
+    <span>·</span>
+    <a href="https://whatsapp.com/channel/0029Vb8F4rCG3R3au4uqf21P" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+  </div>
+</div>
+
+<main>
+  <section class="artigo-topo">
+    <div class="wrap">
+      <div id="artigo">
+        <p class="kicker">Carregando</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="relacionadas" hidden>
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="kicker">Continue lendo</p>
+          <h2 class="font-display">Na mesma editoria</h2>
+        </div>
+        <a class="link-fire" href="blog.html">Ver todas
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+      <div class="grade-posts" id="gradeRelacionadas" style="margin-top:30px"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap footer-grid" style="padding:52px 28px 40px;display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:44px">
+    <div>
+      <a href="index.html" class="brand" style="gap:10px">
+        <img src="assets/img/chama.webp" alt="" style="height:38px;width:auto;filter:drop-shadow(0 2px 10px rgba(255,110,40,.4))"/>
+        <img src="assets/img/logo-texto.webp" alt="Lado Esquerdo de Curitiba" style="height:32px;width:auto"/>
+      </a>
+      <p class="font-serif" style="margin:16px 0 0;max-width:330px;color:var(--muted);font-size:15.5px;line-height:1.55">Informação política e social em Curitiba. Análise, fatos e posicionamento.</p>
+    </div>
+    <nav class="fcol" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;font-family:'Chakra Petch';font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:600">
+      <a href="index.html" style="color:var(--fg);margin-bottom:6px">Navegar</a>
+      <a href="index.html">Início</a><a href="blog.html">Blog</a><a href="index.html#projeto">O Projeto</a>
+    </nav>
+    <div class="fcol" style="font-size:14px;color:var(--muted)">
+      <a href="https://www.instagram.com/ladoesquerdodecuritiba/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://whatsapp.com/channel/0029Vb8F4rCG3R3au4uqf21P" target="_blank" rel="noopener noreferrer">Canal no WhatsApp</a>
+      <span style="display:block;padding:5px 0;color:var(--muted-2)">Curitiba, Paraná</span>
+    </div>
+  </div>
+  <div class="rodape-base">
+    <div class="wrap rodape-base-linha">
+      <p class="rodape-copy">© 2026 Lado Esquerdo de Curitiba. Todos os direitos reservados.</p>
+      <p class="rodape-credito">Desenvolvido por <a href="https://daniel-soberanis.vercel.app" target="_blank" rel="noopener noreferrer">Daniel Soberanis</a></p>
+      <p class="rodape-lema">Feito com apuração e posicionamento.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/blog/posts.js"></script>
+<script src="js/blog.js" defer></script>
+<script src="js/app.js" defer></script>
+</body>
+</html>

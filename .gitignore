@@ -1,0 +1,19 @@
+# Sistema / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/*
+!.vscode/settings.json
+*.log
+
+# Node (quando entrar a etapa de blog/Notion)
+node_modules/
+dist/
+.next/
+.vercel/
+.env
+.env.local
+
+# Backups e pacotes locais
+_backups/
+*.zip

@@ -1,0 +1,12 @@
+{
+  "name": "sitearena-ladoesquerdo",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Site e blog do Lado Esquerdo de Curitiba",
+  "type": "module",
+  "scripts": {
+    "dev": "npx serve . -l 3000",
+    "start": "npx serve . -l 3000"
+  },
+  "engines": { "node": ">=18" }
+}

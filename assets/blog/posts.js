@@ -1,0 +1,96 @@
+/* Dados de exemplo — usados quando a API do Notion não está configurada
+   ou quando o site é aberto direto do disco (file://), onde fetch de JSON é bloqueado. */
+window.POSTS_EXEMPLO = {
+  "fonte": "exemplo",
+  "atualizadoEm": "2026-10-22T09:00:00-03:00",
+  "posts": [
+    {
+      "slug": "artigo-de-teste-veja-como-o-blog-funciona",
+      "titulo": "Artigo de teste: é assim que uma matéria publicada aparece no site",
+      "resumo": "Este card foi montado automaticamente a partir dos campos de uma matéria (categoria, imagem, resumo e data). Nada foi escrito à mão no HTML.",
+      "categoria": "Teste",
+      "capa": "assets/img/materia-2.webp",
+      "data": "2026-10-22",
+      "autor": "",
+      "destaque": true,
+      "corpo": "<p>Se você está lendo isto, o caminho inteiro funcionou: os campos de uma matéria (título, categoria, imagem de capa, resumo, data e autor) foram lidos e o site montou sozinho o card da página inicial, o card da listagem e esta página.</p><h2>O que o editor preenche</h2><ul><li><strong>Título</strong> — vira o título grande;</li><li><strong>Categoria</strong> — vira o selo laranja acima do título;</li><li><strong>Capa</strong> — vira a imagem do card e do topo da matéria;</li><li><strong>Resumo</strong> — vira a linha fina abaixo do título;</li><li><strong>Data</strong> — define a ordem (mais nova primeiro);</li><li><strong>Autor</strong> — se ficar vazio, assina a Redação.</li></ul><figure><img src=\"assets/img/hero-bg.webp\" alt=\"Exemplo de imagem no meio do texto\"><figcaption>Assim aparece uma imagem colocada no meio do texto, com a legenda embaixo.</figcaption></figure><h2>Imagens no meio do texto</h2><p>No Notion, o editor simplesmente arrasta a foto para o ponto exato do texto. Ela sai aqui formatada, com legenda, sem ninguém precisar mexer em código.</p><blockquote>Tudo o que você vê nesta página veio de campos preenchidos, não de HTML escrito à mão.</blockquote><p>Quando o Notion estiver conectado, este mesmo resultado acontece com o que você escrever lá — sem precisar pedir uma nova versão do site para mim.</p>"
+    },
+    {
+      "slug": "camara-aprova-orcamento-sem-ouvir-a-periferia",
+      "titulo": "Câmara aprova orçamento sem ouvir a periferia de Curitiba",
+      "resumo": "Audiências esvaziadas e emendas de última hora marcam a votação que define as prioridades da cidade para o próximo ano.",
+      "categoria": "Política local",
+      "capa": "assets/img/materia-1.webp",
+      "data": "2026-10-20",
+      "autor": "",
+      "destaque": true,
+      "corpo": "<p>A votação do orçamento de Curitiba para o próximo ano durou menos de três horas e terminou com <strong>31 votos favoráveis</strong> e apenas quatro contrários. Fora do plenário, nenhuma audiência pública registrou mais de 40 pessoas nas regiões Sul e Norte da cidade.</p><p>O texto-base chegou aos vereadores na madrugada anterior, com 214 emendas apresentadas e apenas 27 lidas em plenário. Entre elas, R$ 18 milhões destinados a obras de drenagem em bairros que sofreram alagamento em janeiro.</p><h2>O que ficou fora</h2><p>O documento não prevê verba para a nova sede do conselho tutelar do Tatuquara, reivindicação antiga de moradores, nem para a ampliação do programa de hortas comunitárias.</p><figure><img src=\"assets/img/materia-3.webp\" alt=\"Usuários esperam ônibus em terminal no início da noite\"><figcaption>Terminais seguem sem investimento previsto para 2027. Foto: Redação</figcaption></figure><p>Já as emendas que ampliam o orçamento da comunicação institucional da prefeitura somam R$ 12 milhões, um aumento de 38% em relação ao ano passado.</p><blockquote>Uma cidade não se mede pelo que gasta com faixas, mas pelo que gasta com quem precisa chegar em casa.</blockquote><h2>Como votaram</h2><p>A lista completa com o voto de cada vereador está sendo conferida pela reportagem e será publicada assim que finalizada a apuração.</p>"
+    },
+    {
+      "slug": "entrevista-a-cidade-que-a-gente-quer-comeca-na-rua",
+      "titulo": "Entrevista: a cidade que a gente quer começa na rua",
+      "resumo": "Conversamos sobre mandato popular, racismo institucional e os desafios de fazer política de esquerda na capital.",
+      "categoria": "Entrevista",
+      "capa": "assets/img/materia-2.webp",
+      "data": "2026-10-17",
+      "autor": "Marina Alves",
+      "destaque": false,
+      "corpo": "<p>Ela chegou ao centro cultural com o caderno na mão e a fala firme de quem já foi interrompida muitas vezes. Nos encontramos para falar sobre o que significa construir um mandato popular em uma capital que insiste em se apresentar como modelo.</p><p>“A cidade planejada que aparece nos anúncios não é a cidade onde a minha vizinhança vive”, diz. “Curitiba tem dois relógios. Um deles marca a hora do cartão-postal. O outro marca a hora de quem sai às cinco da manhã.”</p><h2>Mandato e rua</h2><p>Na nossa conversa, defendemos que a agenda política não pode ser definida só dentro do gabinete:</p><ul><li>audiências abertas nos bairros, no horário de quem trabalha;</li><li>orçamento participativo com prestação de contas mensal;</li><li>gabinete itinerante com agenda publicada.</li></ul><figure><img src=\"assets/img/hero-bg.webp\" alt=\"Manifestação noturna no centro da cidade\"><figcaption>Manifestação no centro, onde a entrevista foi encerrada. Foto: Redação</figcaption></figure><p>O tom muda quando o assunto é racismo institucional. “Não é só sobre dados. É sobre desenho de política pública. Quando não se mede, não se enxerga.”</p><h2>O que vem depois</h2><p>Ela encerrou a conversa com um convite: que a entrevista sirva de ponto de partida para narrativas produzidas pelas próprias comunidades.</p>"
+    },
+    {
+      "slug": "tarifa-do-onibus-pesa-cada-vez-mais-no-bolso",
+      "titulo": "Tarifa do ônibus pesa cada vez mais no bolso de quem trabalha",
+      "resumo": "Levantamento mostra que o custo do transporte já compromete parte importante da renda das famílias longe do centro.",
+      "categoria": "Mobilidade",
+      "capa": "assets/img/materia-3.webp",
+      "data": "2026-10-14",
+      "autor": "",
+      "destaque": false,
+      "corpo": "<p>Para quem mora na Cidade Industrial e trabalha no centro, o ônibus custa hoje o equivalente a dois dias de salário mínimo por mês, considerando o cartão de transporte.</p><p>Os dados foram levantados a partir do valor da tarifa, do número de viagens mediadas pelo urbanizador de transporte e das rendas médias por bairro divulgadas no último censo.</p><h2>O caminho mais longo</h2><p>O problema não é só o preço, é o tempo. Em bairros periféricos, o percurso médio até o centro chega a 1h20, com até duas baldeações.</p><figure><img src=\"assets/img/hero-bg.webp\" alt=\"Usuários em terminal de ônibus à noite\"><figcaption>Terminal lotado no início da noite. Foto: Redação</figcaption></figure><blockquote>Acesso ao transporte público é política de direita ou de esquerda? É bom senso.</blockquote><p>A reportagem procurou a prefeitura e a empresa responsável pelo sistema e aguarda posicionamento.</p>"
+    },
+    {
+      "slug": "janela-de-outubro",
+      "titulo": "Coletivos fazem mapeamento de violência policial em Curitiba",
+      "resumo": "A denúncia é o resultado de uma Janela de Direitos Humanos realizada em outubro, com dados coletados em sete regionais.",
+      "categoria": "Direitos humanos",
+      "capa": "assets/img/hero-bg.webp",
+      "data": "2026-10-02",
+      "autor": "Coletivo Janela de Direitos",
+      "destaque": false,
+      "corpo": "<p>O relatório aponta aumento das abordagens violentas em três regionais e a ausência de protocolos claros de registro.</p><p>O conselho de direitos humanos acionou a Defensoria Pública para solicitar auditoria de câmeras corporais.</p>"
+    },
+    {
+      "slug": "vereadoras-mandato-coletivo-balanco",
+      "titulo": "Mandatos coletivos mudam o tom da Câmara em ano de orçamento",
+      "resumo": "Balanço de seis meses mostra mais requerimentos de informação e menos projetos protocolados sem consulta pública.",
+      "categoria": "Política local",
+      "capa": "assets/img/materia-1.webp",
+      "data": "2026-09-24",
+      "autor": "",
+      "destaque": false,
+      "corpo": "<p>O levantamento acompanhou a produção legislativa de três mandatos coletivos e comparou com o mesmo período do ano anterior.</p><p>O número de requerimentos de informação subiu 46%, enquanto projetos protocolados sem consulta pública caíram pela metade.</p><h2>O que mudou na prática</h2><p>Audiências públicas passaram a ser convocadas com antecedência mínima de 15 dias e com transmissão ao vivo.</p>"
+    },
+    {
+      "slug": "cultura-de-periferia-mapa",
+      "titulo": "Mapa da cultura de periferia ganha segunda edição",
+      "resumo": "Levantamento reúne 73 espaços culturais autogeridos e mostram uma rede que cresce apesar do corte de verbas.",
+      "categoria": "Cultura",
+      "capa": "assets/img/materia-2.webp",
+      "data": "2025-09-06",
+      "autor": "",
+      "destaque": false,
+      "corpo": "<p>A segunda edição do mapa reúne 73 espaços culturais autogeridos em Curitiba e região metropolitana.</p><p>O documento é gratuito e será atualizado a cada ano com sugestões enviadas pelos próprios coletivos.</p>"
+    },
+    {
+      "slug": "escola-e-territorio",
+      "titulo": "Escola é território: como a comunidade de um bairro ocupou seu pátio",
+      "resumo": "Uma horta, uma biblioteca e um cineclube: um relato sobre a escola que deixou de ser só prédio público.",
+      "categoria": "Educação",
+      "capa": "assets/img/materia-1.webp",
+      "data": "2025-08-11",
+      "autor": "Redação Lado Esquerdo de Curitiba",
+      "destaque": false,
+      "corpo": "<p>A quatro quadras do terminal, a escola que abriu o pátio aos sábados passou a ter a comunidade dentro dela.</p><p>O relato mostra como a gestão compartilhada mudou a relação dos moradores com o espaço público.</p>"
+    }
+  ]
+};
