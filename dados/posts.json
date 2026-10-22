@@ -1,0 +1,4 @@
+{
+  "_instrucoes": "Publicação de emergência (sem Notion). Cada item da lista 'posts' vira uma matéria no site. Campos: slug (único, sem acento), titulo, resumo, categoria, capa (caminho da imagem, ex: assets/img/blog/foto.jpg), capaCredito, data (AAAA-MM-DD), autor (vazio = Redação Lado Esquerdo de Curitiba), destaque (true = manchete da home) e corpo (HTML: <p>, <h2>, <ul><li>, <blockquote>, <figure><img><figcaption>). A lista está vazia: o site usa normalmente o conteúdo do Notion.",
+  "posts": []
+}

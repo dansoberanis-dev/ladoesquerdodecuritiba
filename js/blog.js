@@ -15,6 +15,7 @@
     apiPost: '/api/post',
     fallback: 'assets/blog/posts.json',
     fallbackJs: 'assets/blog/posts.js',
+    arquivoLocal: 'dados/posts.json',
     destaqueNaHome: 3,
     topoDaListagem: 1
   };
@@ -84,6 +85,39 @@
 
   var _cache = null;
 
+  function porData(a, b) { return new Date(b.data) - new Date(a.data); }
+
+  /* arquivo local (dados/posts.json) — usado quando o Notion está fora do ar,
+     vazio, ou quando a redação publica por git em modo de emergência */
+  function carregarArquivo() {
+    if (location.protocol === 'file:') {
+      return Promise.resolve({ posts: [] });
+    }
+    return fetch(CONFIG.arquivoLocal + '?t=' + Date.now(), { headers: { accept: 'application/json' } })
+      .then(function (r) { if (!r.ok) throw new Error('arquivo ' + r.status); return r.json(); })
+      .then(function (j) { return { posts: (j && j.posts) || [] }; })
+      ['catch'](function () { return { posts: [] }; });
+  }
+
+  /* junta as duas fontes: o Notion manda; o arquivo entra só com o que falta */
+  function juntar(notion, arquivo) {
+    var base = (notion || []).slice();
+    var vistos = {};
+    base.forEach(function (p) { vistos[p.slug] = true; });
+    var extras = (arquivo || []).filter(function (p) {
+      if (!p || !p.slug || vistos[p.slug]) return false;
+      vistos[p.slug] = true;
+      return true;
+    }).map(function (p) {
+      var copia = JSON.parse(JSON.stringify(p));
+      copia.arquivoLocal = true;
+      copia.status = copia.status || 'publicado';
+      copia.publicado = true;
+      return copia;
+    });
+    return { posts: base.concat(extras), extras: extras.length };
+  }
+
   function carregar() {
     if (_cache) return Promise.resolve(_cache);
 
@@ -130,11 +164,19 @@
         return { posts: [], _origem: 'erro' };
       })
       .then(function (j) {
-        j.posts = (j.posts || []).slice().sort(function (a, b) {
-          return new Date(b.data) - new Date(a.data);
+        // o arquivo local só entra quando não estamos exibindo matérias de exemplo
+        if (j._origem === 'exemplo') {
+          j.posts = (j.posts || []).slice().sort(porData);
+          avisoDeOrigem(j._origem);
+          return j;
+        }
+        return carregarArquivo().then(function (arq) {
+          var junto = juntar(j.posts, arq.posts);
+          j.posts = junto.posts.sort(porData);
+          if (junto.extras) j._origem = (j._origem === 'notion' ? 'notion+arquivo' : 'arquivo');
+          avisoDeOrigem(j._origem);
+          return j;
         });
-        avisoDeOrigem(j._origem);
-        return j;
       });
 
     return _cache;
@@ -411,7 +453,11 @@
       var promessaCorpo = (location.protocol !== 'file:')
         ? fetch(CONFIG.apiPost + '?slug=' + encodeURIComponent(slug))
             .then(function (r) { if (!r.ok) throw new Error('sem api'); return r.json(); })
-            .then(function (j) { return j && j.post ? j.post : null; })
+            .then(function (j) {
+              // só aceita se for a matéria pedida (protege matérias do arquivo local)
+              var c = j && j.post ? j.post : null;
+              return (c && c.slug === slug) ? c : null;
+            })
             ['catch'](function () { return null; })
         : Promise.resolve(null);
 
