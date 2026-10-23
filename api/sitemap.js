@@ -34,6 +34,7 @@ export default async function handler(req, res) {
   const partes = [
     url(`${SITE}/`, hoje, '1.0', 'daily'),
     url(`${SITE}/blog`, hoje, '0.9', 'daily'),
+    url(`${SITE}/privacidade`, hoje, '0.3', 'yearly'),
   ];
 
   if (configurado()) {

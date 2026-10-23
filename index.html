@@ -27,8 +27,8 @@
 <meta name="theme-color" content="#120c0a"/>
 <link rel="icon" type="image/png" href="assets/img/favicon.png"/>
 <link rel="apple-touch-icon" href="assets/img/favicon.png"/>
-<link rel="stylesheet" href="css/estilos.css?v=316">
-<link rel="stylesheet" href="css/blog.css?v=316">
+<link rel="stylesheet" href="css/estilos.css?v=317">
+<link rel="stylesheet" href="css/blog.css?v=317">
 <style>
 /* acessibilidade que NÃO pode depender do cache do CSS externo */
 .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
@@ -38,7 +38,38 @@
   text-transform:uppercase;padding:12px 18px;border-radius:10px;text-decoration:none;transition:top .18s ease}
 .pular-para-conteudo:focus{top:14px;outline:2px solid #fff;outline-offset:3px}
 </style>
-<script src="js/analytics.js?v=316" defer></script>
+<style>
+/* aviso de cookies — estilo inline para nao depender do cache do CSS externo */
+#avisoCookies{position:fixed;left:0;right:0;bottom:0;z-index:9000;padding:14px;
+  display:flex;justify-content:center;pointer-events:none;
+  opacity:0;transform:translateY(14px);transition:opacity .3s ease,transform .3s ease}
+#avisoCookies.aberto{opacity:1;transform:none}
+#avisoCookies[hidden]{display:none!important}
+#avisoCookies .ck-caixa{pointer-events:auto;display:flex;align-items:center;gap:16px;
+  max-width:760px;width:100%;padding:16px 18px;border-radius:14px;
+  background:linear-gradient(180deg,#291a15 0%,#1b1110 100%);
+  border:1px solid rgba(255,170,110,.22);
+  box-shadow:0 24px 54px -22px rgba(0,0,0,.95),inset 0 1px 0 rgba(255,214,176,.08)}
+#avisoCookies .ck-texto{margin:0;font-family:Newsreader,Georgia,serif;font-size:14.5px;line-height:1.5;color:#cbbdb4}
+#avisoCookies .ck-texto strong{color:#f7efe8;font-weight:600}
+#avisoCookies .ck-texto a{color:#ffb763;text-decoration:underline;text-underline-offset:2px}
+#avisoCookies .ck-acoes{display:flex;gap:9px;flex:none}
+#avisoCookies .ck-btn{font-family:"Chakra Petch",system-ui,sans-serif;font-weight:700;font-size:10.5px;
+  letter-spacing:.1em;text-transform:uppercase;padding:11px 16px;border-radius:7px;cursor:pointer;
+  border:1px solid transparent;white-space:nowrap;transition:transform .2s,filter .2s}
+#avisoCookies .ck-aceitar{background:linear-gradient(135deg,#cc2318,#f8691a 62%,#ff8c1a);color:#fff;
+  border-color:rgba(255,158,96,.3);box-shadow:0 10px 24px -10px rgba(226,58,26,.9)}
+#avisoCookies .ck-aceitar:hover{transform:translateY(-1px);filter:brightness(1.07)}
+#avisoCookies .ck-recusar{background:rgba(255,236,222,.05);border-color:rgba(255,190,140,.24);color:#e9ded6}
+#avisoCookies .ck-recusar:hover{background:rgba(255,140,26,.1);color:#fff}
+@media(max-width:760px){
+  #avisoCookies{padding:10px}
+  #avisoCookies .ck-caixa{flex-direction:column;align-items:stretch;gap:13px;padding:15px 15px 14px}
+  #avisoCookies .ck-acoes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  #avisoCookies .ck-btn{padding:12px 10px;font-size:10px;text-align:center}
+}
+</style>
+<script src="js/analytics.js?v=317" defer></script>
 </head>
 <body>
 
@@ -324,7 +355,7 @@
     </div>
     <nav class="fcol" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;font-family:'Chakra Petch';font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:600">
       <a href="#top" style="color:var(--fg);margin-bottom:6px">Navegar</a>
-      <a href="#top">Início</a><a href="/blog">Blog</a><a href="#projeto">O Projeto</a><a href="#apoie">Apoie</a>
+      <a href="#top">Início</a><a href="/blog">Blog</a><a href="#projeto">O Projeto</a><a href="#apoie">Apoie</a><a href="/privacidade">Privacidade</a><a href="#" data-cookie-reabrir>Cookies</a>
     </nav>
     <div class="fcol" style="font-size:14px;color:var(--muted)">
       <a href="https://www.instagram.com/ladoesquerdodecuritiba/" target="_blank" rel="noopener noreferrer">Instagram</a>
@@ -342,8 +373,19 @@
 </footer>
 
 <script src="assets/blog/posts.js"></script>
-<script src="js/stats.js?v=316" defer></script>
-<script src="js/blog.js?v=316" defer></script>
-<script src="js/app.js?v=316" defer></script>
+<script src="js/stats.js?v=317" defer></script>
+<script src="js/blog.js?v=317" defer></script>
+<script src="js/app.js?v=317" defer></script>
+<!-- aviso de cookies (LGPD): escondido por padrao, o js/cookies.js decide -->
+<div id="avisoCookies" role="dialog" aria-live="polite" aria-label="Aviso de cookies" hidden>
+  <div class="ck-caixa">
+    <p class="ck-texto"><strong>Cookies e medição.</strong> Usamos cookies do Google Analytics para entender como o site é lido. Nada de anúncio, nada de venda de dado. Você escolhe: <a href="/privacidade">política de privacidade</a>.</p>
+    <div class="ck-acoes">
+      <button type="button" class="ck-btn ck-aceitar" data-cookie="aceito">Aceitar</button>
+      <button type="button" class="ck-btn ck-recusar" data-cookie="recusado">Recusar</button>
+    </div>
+  </div>
+</div>
+<script src="js/cookies.js?v=317" defer></script>
 </body>
 </html>
