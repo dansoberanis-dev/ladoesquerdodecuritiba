@@ -151,7 +151,9 @@ export default async function middleware(req) {
 
   const origem = url.origin || SITE;
   const slug = url.searchParams.get('slug');
-  const urlFinal = `${origem}/artigo${slug ? `?slug=${encodeURIComponent(slug)}` : ''}`;
+  // canonical e og:url SEMPRE no domínio oficial — mesmo quando a página é
+  // aberta pelo endereço provisório da Vercel (evita conteúdo duplicado no Google)
+  const urlFinal = `${SITE}/artigo${slug ? `?slug=${encodeURIComponent(slug)}` : ''}`;
 
   let html;
   try {
