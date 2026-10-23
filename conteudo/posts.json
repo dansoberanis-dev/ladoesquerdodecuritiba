@@ -1,6 +1,6 @@
 {
   "_aviso": "Acervo do blog, gerado automaticamente por scripts/sincronizar.mjs. O Notion decide o que está no ar (publicado: true/false); este arquivo guarda o conteúdo e as imagens. Itens com \"origem\": \"manual\" são publicados à mão e nunca são alterados pela sincronização.",
-  "atualizadoEm": "2026-10-23T11:09:32.760Z",
+  "atualizadoEm": "2026-10-23T16:37:30.843Z",
   "site": "https://ladoesquerdodecuritiba.vercel.app",
   "total": 3,
   "arquivadas": 0,
@@ -27,7 +27,7 @@
         "https://www.brasildefato.com.br/wp-content/uploads/2026/10/img7278-ef7194bf-1024x683.webp"
       ],
       "publicadoEm": "2026-10-22",
-      "espelhadoEm": "2026-10-23T11:09:31.071Z"
+      "espelhadoEm": "2026-10-23T16:37:29.115Z"
     },
     {
       "slug": "teste2",
@@ -45,10 +45,10 @@
       "fonte": 1,
       "corpo": "<p>Primeiro parágrafo normal, para conferir o corpo do texto e a largura de leitura da matéria.</p><h2>Um subtítulo de seção</h2><p>Segundo parágrafo, logo depois de um subtítulo, para verificar o espaçamento entre os blocos.</p><ul><li>primeiro item de uma lista</li><li>segundo item</li><li>terceiro item</li></ul><figure><img src=\"conteudo/img/teste2/corpo-1.png\" alt=\"\" loading=\"lazy\"></figure><blockquote>Uma citação de teste, para conferir o estilo das aspas e da barra laranja.</blockquote><p>Terceiro parágrafo, depois da citação.</p>",
       "imagens": [
-        "https://prod-files-secure.s3.us-west-2.amazonaws.com/5f0d0517-6ce3-8170-aa12-000341281d0a/e948d6ae-452d-4876-84c8-6fc7d85af5bc/LOGOCHAMA.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466US6XGA4O%2F20261023%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20261023T110931Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEMH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQC6h58ozhF6071hTjvuhdEEB3KZBmgfwFUeFValxHWK5AIhAN919up0zv56KsnUDw58aMgdMpUAuMFxAP3qVieo8Qp4KogECIn%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNjM3NDIzMTgzODA1IgxHtO3YdmPBpY74NeAq3AOPD%2BuzupafmkEik1nuLiIsp6FiiRp81Wq%2FoC%2FZo4alAimZ7tlB%2FKENCo80wEbwc1uz9WQpwzQOkM1t0O1fGt5Wo37mAbHjlu4f%2BdiRi2VKe5GszdBCgQCD%2F%2B97FmaZkJ00YNZMitbeQ2vgT2Q1QAQvmQi4qZ2FjeXx8zYfOarv0lcTyvoCQak%2F%2BK6J%2FmRqf9B8%2BjO0euU6SO7QOP0igbYLRKEtSl3B%2FD5XoPMuxZtroAh%2BiiLXozZAz0EIh%2FvqPnrrnF5DO4OhvJ9XssjL7c1W9aj3PBh9SZEmf2cIfRiRCej9mbQ2cAFkLS%2FlY2XGZ2FRd2qqNcoRF3hpbX3XIF7hy2PgA0FTK1mByJVAabmKrZ6oyR24LpGdmIkFCSIRmJtVGIWhvB6CwunKgNAlLjxpvDOhIfp6kaN%2B%2FhKoVRnnfAd2eLjYuYRTHDJ%2B7Iw8ySfLTSKGgrPnpdeZj%2F0%2BUe%2BRjyZJz9UIhpL9enjbfMskvu8v8Yyk9wCzzP1ceZim2HbkHD4prp1JHnq%2BRJFGuHOSZEhjSlhzmiY2P0idrlV4ZDL%2FPYTcVTnyDPIRLeN4Elum6FAm006I3LMd8fACm4nI5Rk3lCIyrMeeEEqZLIzcpy4ix3KycFltXgyQHTCJtuzWBjqkAR2GUEZrzCRPBbKjhvQR1okcoEC%2FZuz1Dh7u2qnHLWUwM%2BdEdsrJnx7FPKSmq0E2NuNZRHyqkD4tpbWhZhMC2PvZTQKJSi8%2BnvjegeX0ZmCCljbYHPt6i7k8I9baNjLLkyB6USpxDaGRvUK1Ws%2FhPOS0CiP3zAtYjI1vcJQgvNZ47GUAhWu7qoRVwqcnsw8kgMCa%2F%2FaNotC%2BMgIvf061HxJ35nWH&X-Amz-Signature=0aa1f285fb973aec1491d1274162a7921495faee677c1b6a8997b9f152cfe4c0&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"
+        "https://prod-files-secure.s3.us-west-2.amazonaws.com/5f0d0517-6ce3-8170-aa12-000341281d0a/e948d6ae-452d-4876-84c8-6fc7d85af5bc/LOGOCHAMA.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466VIHPXLMK%2F20261023%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20261023T163729Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEMf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIGpjJP%2FLsT41N5WC8Vzly1KPU51iwtv0WA3XRUr4G%2BjnAiAFvywt3qycQh8u8Mecgm36CehjgqY5x54U%2BswkgOHC8iqIBAiP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDYzNzQyMzE4MzgwNSIMm2R60iHWjv5dsUKXKtwDeEQHUhxghkAd%2FVS%2FtibCIboLr5lsdsDaIkK%2BPYnwGDnC5N5Rm7ke%2BtNS4YIJLpGxxYwIvjRCAtuz2U7roQjKSRI9mxUSS3dRWkJ0S25vhhVGIQbCGrP71uZWpe765vigeN%2B2%2FBbCCJkvlkK1tK6r51%2BA90kQL0f0oymCvTEafeHIIR%2Febk6%2BTPGUIvx1YYY8lIFiglSoso36RSWxaKOlJSRoy7D9hGC3mrQzb%2B7tg6pIcXeLpBN8SO9%2FrUs1POdudAzE0iqorWfu9Q43%2BbwaHegM%2Bqz%2F0cFrYaspuSbq646w6sDzPXgYXnD9t5mL%2B%2BADLuSkaQ8nv19AaqGRaG5Em4msNtZvc%2FpAYhi9YOZ%2Fe0aWG3dac%2B0ycxGGQ79612DzahGIOUQeTKRxABP1Tzq0QhWt6ARPGXBF4csJD3ONg3c0heizb4IoG%2Fy0pzRk%2Bg4zdktj7goN0mHnJFdVIvgHoDURF0eur1tmNMxV7gFOUGtBjoP5Tejn%2Bv9gPZfSv0IeqWUUVfUdFmLIpbIYRxEcaOY5fQjZqsRFj3FSkq7nfA4yxkeQVpNsq%2FUv1gIGMH7C6TRRYVH865XaAZiCNPOKE96Yln3v8Pp1sVdVWTJgKEnR6XGTyGICHslOfrkww9zt1gY6pgFv3aPhnzyDbMFtlVgbdYKatkT9V61IWhpJZgeUAC%2FteSZdpDHSzx4rA9G9h2MHu7hfKpBjWkgfr7488GctzY1ZZjIrxWve1%2BEMVuywvlcXC8PoNuYhiUWaJeyzH54I3D%2B4Mr%2BTzy4xpuh0rqU1hiyswtEj3o1j6IJ3G01jcpfemeN%2Bx0UJMXqgdhkruP4GWHg%2BND6OSRilomhir84tZyBohy6qDjKH&X-Amz-Signature=54a6097329b410ce77ee547e62a3d0d3f2a2aacbad24eaea9c09d865f7215412&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"
       ],
       "publicadoEm": "2026-10-22",
-      "espelhadoEm": "2026-10-23T11:09:32.192Z"
+      "espelhadoEm": "2026-10-23T16:37:30.054Z"
     },
     {
       "slug": "teste-de-integracao",
@@ -67,7 +67,7 @@
       "corpo": "<p>Esta é a primeira matéria criada no Notion para testar a integração com o site.</p><h2>Um subtítulo de teste</h2><p>Este parágrafo existe para verificar se os títulos de seção aparecem corretamente formatados.</p><blockquote>Uma citação de teste, para conferir o estilo das aspas.</blockquote>",
       "imagens": [],
       "publicadoEm": "2026-10-22",
-      "espelhadoEm": "2026-10-23T11:09:32.760Z"
+      "espelhadoEm": "2026-10-23T16:37:30.843Z"
     }
   ]
 }
