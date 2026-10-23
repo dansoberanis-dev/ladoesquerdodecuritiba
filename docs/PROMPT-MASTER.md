@@ -1,12 +1,13 @@
 # PROMPT MASTER — Lado Esquerdo de Curitiba (site + blog)
 
 > Documento de retomada. Serve para você voltar ao projeto depois de meses, ou para entregar a outro assistente/desenvolvedor e continuar exatamente de onde paramos.
-> Última atualização: **23/10/2026 — versão 3.1.5**
+> Última atualização: **23/10/2026 — versão 3.1.6**
 
 ---
 
 ## 0. Histórico recente
 
+- **3.1.6 (23/10/2026)** — Google Analytics 4 (`G-K9SEW9QWT7`) ativo nas 4 páginas via `js/analytics.js` (arquivo local, sem script inline), com CSP ajustada para `googletagmanager` e `google-analytics`.
 - **3.1.5 (23/10/2026)** — cards menores da home: a categoria saiu de cima da foto (tapava os rostos) e passou para a direita, acima do título. Card de destaque e página do blog seguem como estavam.
 - **3.1.4 (23/10/2026)** — véu do card de destaque reposicionado: a imagem respira até ~62% da altura e o degradê só carrega embaixo do texto; travessão removido do texto da seção "Apoie o projeto".
 - **3.1.3 (23/10/2026)** — nova seção **“Apoie o projeto”** na home, entre *O projeto* e *Redes sociais*, com o link da campanha no Vakinha, a meta de R$ 6.000, a informação do sorteio de R$ 1.000 e a chave Pix `6310653@vakinha.com.br`. Link “Apoie” acrescentado ao rodapé.
