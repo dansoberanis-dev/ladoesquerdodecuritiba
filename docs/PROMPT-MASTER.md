@@ -1,7 +1,15 @@
 # PROMPT MASTER — Lado Esquerdo de Curitiba (site + blog)
 
 > Documento de retomada. Serve para você voltar ao projeto depois de meses, ou para entregar a outro assistente/desenvolvedor e continuar exatamente de onde paramos.
-> Última atualização: **23/10/2026 — versão 3.1.1**
+> Última atualização: **23/10/2026 — versão 3.1.3**
+
+---
+
+## 0. Histórico recente
+
+- **3.1.3 (23/10/2026)** — nova seção **“Apoie o projeto”** na home, entre *O projeto* e *Redes sociais*, com o link da campanha no Vakinha, a meta de R$ 6.000, a informação do sorteio de R$ 1.000 e a chave Pix `6310653@vakinha.com.br`. Link “Apoie” acrescentado ao rodapé.
+- **3.1.2** — canonical/`og:url` das matérias fixados no domínio oficial (middleware).
+- **3.1.1** — correção do hero em produção: CSS/JS com selo de versão + CSS crítico inline.
 
 ---
 
