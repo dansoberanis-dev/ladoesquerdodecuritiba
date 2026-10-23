@@ -19,8 +19,9 @@
   transition:transform .9s var(--ease);filter:saturate(1.02) contrast(1.04)}
 .destaque-card:hover .destaque-fundo .ph{transform:scale(1.04)}
 .destaque-veu{position:absolute;inset:0;
-  background:linear-gradient(to top,rgba(10,7,6,.97) 12%,rgba(14,9,8,.72) 46%,rgba(14,9,8,.12) 82%),
-             linear-gradient(90deg,rgba(10,7,6,.6),transparent 62%)}
+  background:linear-gradient(to top,rgba(10,7,6,.97) 0%,rgba(10,7,6,.93) 15%,rgba(12,8,7,.76) 27%,
+             rgba(14,9,8,.40) 44%,rgba(14,9,8,.12) 62%,rgba(14,9,8,0) 78%),
+             linear-gradient(90deg,rgba(10,7,6,.55),transparent 58%)}
 .destaque-texto{position:absolute;bottom:0;left:0;right:0;padding:30px}
 .destaque-titulo{margin:12px 0 0;font-size:clamp(24px,2.6vw,32px);font-weight:700;line-height:1.06;letter-spacing:-.01em}
 .destaque-resumo{margin:11px 0 0;color:rgba(247,239,232,.72);font-size:16.5px;line-height:1.5;
