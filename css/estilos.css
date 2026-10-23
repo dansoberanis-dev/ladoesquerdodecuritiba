@@ -7,7 +7,7 @@
 :root{
   --bg:#140d0b; --bg-soft:#1b1210; --card:#1f1512; --card-2:#241814; --ash:#0e0a09;
   --border:rgba(255,168,110,.14);
-  --fg:#f7efe8; --muted:#a99a91; --muted-2:#8c7e76;
+  --fg:#f7efe8; --muted:#a99a91; --muted-2:#a3958c;
   /* fogo — amostrado do botão e da chama */
   --fire-deep:#a81c12; --fire:#cc2318; --fire-mid:#e8401a; --flame:#f8691a; --amber:#ff8c1a; --amber-soft:#ffb763; --cream:#fdeee2;
   --btn-fire:linear-gradient(96deg,#a81c12 0%,#c62318 16%,#e23a1a 38%,#f2601a 60%,#ff8c1a 82%,#ffa63c 100%);
@@ -233,3 +233,19 @@ body.menu-open header#siteHeader{background:transparent!important;backdrop-filte
 
 /* selo de data da última sincronização das redes */
 .stat-fonte{font-weight:600;opacity:.75}
+
+/* ---------- acessibilidade: conteúdo só para leitores de tela ---------- */
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0
+}
+
+/* ---------- atalho "pular para o conteúdo" (aparece no primeiro Tab) ---------- */
+.pular-para-conteudo{
+  position:absolute;left:14px;top:-60px;z-index:9999;
+  background:var(--fire,#cc2318);color:#fff;font-family:"Chakra Petch",sans-serif;
+  font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:12px 18px;border-radius:10px;text-decoration:none;
+  transition:top .18s ease
+}
+.pular-para-conteudo:focus{top:14px;outline:2px solid #fff;outline-offset:3px}

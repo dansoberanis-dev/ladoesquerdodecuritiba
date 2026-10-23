@@ -11,7 +11,7 @@
  * Qualquer outra rota passa direto, sem interferência.
  */
 
-const SITE = 'https://ladoesquerdodecuritiba.vercel.app';
+const SITE = 'https://www.ladoesquerdodecuritiba.com.br';
 const OG_PADRAO = SITE + '/assets/img/og-padrao.jpg';
 
 export const config = {
@@ -58,7 +58,11 @@ export function montarMeta(dados, urlFinal) {
       'Jornalismo crítico, entrevistas e cobertura de rua em Curitiba.',
     200
   );
-  const imagem = escUrl((dados && dados.capa) || OG_PADRAO);
+  // robô de prévia exige endereço absoluto (caminho local do acervo vira URL completa)
+  let imagem = escUrl((dados && dados.capa) || OG_PADRAO);
+  if (imagem && !/^https?:/i.test(imagem)) {
+    imagem = SITE + '/' + imagem.replace(/^\.?\//, '');
+  }
   const autor = (dados && dados.autor) || 'Redação Lado Esquerdo de Curitiba';
   const tituloCompleto = titulo ? `${titulo} — Lado Esquerdo de Curitiba` : 'Lado Esquerdo de Curitiba';
 
@@ -80,11 +84,34 @@ export function montarMeta(dados, urlFinal) {
     linhas.push(`<meta property="article:published_time" content="${esc(dados.data)}"/>`);
   }
   linhas.push(
+    '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>',
     '<meta name="twitter:card" content="summary_large_image"/>',
     `<meta name="twitter:title" content="${esc(titulo || 'Lado Esquerdo de Curitiba')}"/>`,
     `<meta name="twitter:description" content="${esc(descricao)}"/>`,
     `<meta name="twitter:image" content="${imagem}"/>`
   );
+  // dados estruturados da matéria (habilita Google Notícias/Discover)
+  const dados_ld = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: titulo || 'Lado Esquerdo de Curitiba',
+    description: descricao,
+    image: [imagem],
+    datePublished: (dados && dados.data) || undefined,
+    dateModified: (dados && dados.data) || undefined,
+    articleSection: (dados && dados.categoria) || undefined,
+    inLanguage: 'pt-BR',
+    author: { '@type': 'Organization', name: autor },
+    publisher: {
+      '@type': 'NewsMediaOrganization',
+      name: 'Lado Esquerdo de Curitiba',
+      logo: { '@type': 'ImageObject', url: SITE + '/assets/img/logo-completa.webp' },
+    },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': urlFinal },
+  };
+  const limpo = JSON.parse(JSON.stringify(dados_ld));
+  linhas.push('<script type="application/ld+json">' + JSON.stringify(limpo) + '</script>');
+
   return linhas.join('\n');
 }
 
@@ -97,7 +124,7 @@ export function injetar(html, meta) {
   let head = html.slice(ini, fim);
   head = head.replace(/<title>[\s\S]*?<\/title>\s*/gi, '');
   head = head.replace(
-    /<meta\s+(?:property|name)="(?:og:[^"]*|twitter:[^"]*|description)"[^>]*>\s*/gi,
+    /<meta\s+(?:property|name)="(?:og:[^"]*|twitter:[^"]*|description|robots)"[^>]*>\s*/gi,
     ''
   );
   head = head.replace(/<link\s+rel="canonical"[^>]*>\s*/gi, '');

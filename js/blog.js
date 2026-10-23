@@ -67,7 +67,7 @@
   }
 
   function linkPost(p) {
-    return 'artigo.html?slug=' + encodeURIComponent(p.slug);
+    return '/artigo?slug=' + encodeURIComponent(p.slug);
   }
 
   function nomeMes(n) {
@@ -338,13 +338,19 @@
     });
   }
 
-  /* ---------------- listagem (blog.html) ---------------- */
+  /* ---------------- listagem (/blog) ---------------- */
 
   function montarListagem() {
     var grade = document.getElementById('gradePosts');
     if (!grade) return;
 
     var campoBusca = document.getElementById('busca');
+
+    // veio de um link com ?q= (ex.: busca da página 404)
+    if (campoBusca) {
+      var q0 = new URLSearchParams(location.search).get('q');
+      if (q0) campoBusca.value = q0;
+    }
     var selMes = document.getElementById('filtroMes');
     var selAno = document.getElementById('filtroAno');
     var selOrdem = document.getElementById('ordem');
@@ -471,7 +477,7 @@
         '<p class="kicker">Matéria não encontrada</p>' +
         '<h1 class="font-display">' + esc(msg) + '</h1>' +
         '<p class="font-serif">O link pode estar desatualizado ou a matéria saiu do ar.</p>' +
-        '<a class="btn-fire" href="blog.html">Ver todas as matérias</a></div>';
+        '<a class="btn-fire" href="/blog">Ver todas as matérias</a></div>';
     }
 
     if (!slug) { falha('Nenhuma matéria indicada'); return; }
@@ -503,7 +509,7 @@
         var padrao = ehPadrao(post);
 
         raiz.innerHTML = '' +
-          '<nav class="artigo-migalha meta"><a href="index.html">Início</a> / <a href="blog.html">Blog</a> / ' +
+          '<nav class="artigo-migalha meta"><a href="/">Início</a> / <a href="/blog">Blog</a> / ' +
             '<span>' + esc(post.categoria || 'Matéria') + '</span></nav>' +
           '<div class="artigo-cabeca">' +
             (post.categoria ? '<span class="badge">' + esc(post.categoria) + '</span>' : '') +
@@ -527,7 +533,7 @@
               '<a class="btn-ghost btn-mini" target="_blank" rel="noopener noreferrer" href="https://twitter.com/intent/tweet?text=' + encodeURIComponent(post.titulo) + '&url=' + encodeURIComponent(location.href) + '">X</a>' +
             '</div>' +
           '</footer>' +
-          '<div class="artigo-voltar"><a class="link-fire" href="blog.html">← Voltar para todas as matérias</a></div>';
+          '<div class="artigo-voltar"><a class="link-fire" href="/blog">← Voltar para todas as matérias</a></div>';
 
         var cat = post.categoria;
         if (cat) {

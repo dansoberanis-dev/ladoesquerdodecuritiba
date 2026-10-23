@@ -4,6 +4,24 @@
   "trailingSlash": false,
   "headers": [
     {
+      "source": "/sitemap.xml",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, s-maxage=600, stale-while-revalidate=3600"
+        }
+      ]
+    },
+    {
+      "source": "/robots.txt",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, s-maxage=3600"
+        }
+      ]
+    },
+    {
       "source": "/conteudo/img/(.*)",
       "headers": [
         {
@@ -81,6 +99,16 @@
           "value": "public, s-maxage=60, stale-while-revalidate=300"
         }
       ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/robots.txt",
+      "destination": "/api/robots"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/sitemap"
     }
   ]
 }
