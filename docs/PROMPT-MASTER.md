@@ -1,7 +1,7 @@
 # PROMPT MASTER — Lado Esquerdo de Curitiba (site + blog)
 
 > Documento de retomada. Serve para você voltar ao projeto depois de meses, ou para entregar a outro assistente/desenvolvedor e continuar exatamente de onde paramos.
-> Última atualização: **22/10/2026 — versão 3.0.0**
+> Última atualização: **23/10/2026 — versão 3.1.1**
 
 ---
 
@@ -190,7 +190,7 @@ conteudo/img/<slug>/corpo-N.*    imagens do corpo do texto
 - **`cleanUrls: true`** faz `/artigo.html` redirecionar para `/artigo`. O middleware precisa casar **as duas** rotas e ignorar o pedido interno (`_raw`).
 - **Seletores CSS genéricos** (`header{...}`) já quebraram a página de artigo — escopar em `header#siteHeader`.
 - **`file://`** não executa `fetch` nem `/api`; o site cai nas matérias de exemplo.
-- **Cache do navegador** já mascarou correções: por isso o selo `?v=NNN`.
+- **Cache do navegador** já mascarou correções: por isso o selo `?v=NNN` — em **todos** os arquivos (CSS, JS e blog). **Regra dura:** qualquer CSS/JS novo tem que ser testado simulando o arquivo antigo em cache; e regra de acessibilidade que altera layout (`.sr-only`, skip link) vai **também** em `<style>` crítico no `<head>`, para não depender do CSS externo.
 - **robocopy** não existe no PowerShell do Linux (só importa para testes no sandbox); no Windows do dono funciona normalmente.
 
 ---

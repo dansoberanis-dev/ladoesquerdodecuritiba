@@ -18,8 +18,17 @@
 <meta name="theme-color" content="#120c0a"/>
 <link rel="icon" type="image/png" href="assets/img/favicon.png"/>
 <link rel="apple-touch-icon" href="assets/img/favicon.png"/>
-<link rel="stylesheet" href="css/estilos.css"/>
-<link rel="stylesheet" href="css/blog.css?v=310"/>
+<link rel="stylesheet" href="css/estilos.css?v=311"/>
+<link rel="stylesheet" href="css/blog.css?v=311"/>
+<style>
+/* acessibilidade que NÃO pode depender do cache do CSS externo */
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.pular-para-conteudo{position:absolute;left:14px;top:-80px;z-index:9999;background:#cc2318;color:#fff;
+  font-family:"Chakra Petch",system-ui,sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;padding:12px 18px;border-radius:10px;text-decoration:none;transition:top .18s ease}
+.pular-para-conteudo:focus{top:14px;outline:2px solid #fff;outline-offset:3px}
+</style>
 </head>
 <body>
 <header id="siteHeader">
@@ -112,7 +121,7 @@
 </footer>
 
 <script src="assets/blog/posts.js"></script>
-<script src="js/blog.js?v=310" defer></script>
-<script src="js/app.js" defer></script>
+<script src="js/blog.js?v=311" defer></script>
+<script src="js/app.js?v=311" defer></script>
 </body>
 </html>

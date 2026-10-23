@@ -2,6 +2,8 @@
 
 Auditoria feita **no site publicado** (`ladoesquerdodecuritiba.vercel.app`), medindo desempenho, SEO, acessibilidade, navegação e estrutura. Versão auditada: **3.0.1**.
 
+> **Atualização (23/10/2026):** a entrega **v3.1.0** já resolveu os itens **P0-1, P0-2, P0-3, P0-4**, o **P1-2 (JSON-LD)**, o **P1-6 (contraste)**, o `canonical` da home/blog, o `aria-current`, o skip link, os links internos sem `.html` e a busca por `?q=` (usada pela 404). O que continua pendente: **P0-5** (só no dia do domínio), **P1-1** (corpo no HTML), **P1-3** (medição), **P1-4** (RSS), **P1-5** (dimensões de imagem) e os itens P2.
+
 > Contexto: o dono já divulga o site e o domínio próprio está para ser liberado pelo registro.br. **Dois itens desta lista (P0-1 e P0-5) precisam ser resolvidos antes do domínio entrar no ar.**
 
 ---
