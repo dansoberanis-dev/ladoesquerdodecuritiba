@@ -266,15 +266,22 @@
       '</a>';
   }
 
-  function cardVertical(p, atraso) {
+  /* categoriaNoTopo: nos cards menores da home a categoria sai de cima da foto
+     (ela tapava os rostos) e vai para a direita, acima do título. */
+  function cardVertical(p, atraso, categoriaNoTopo) {
+    var badgeFora = (categoriaNoTopo && p.categoria)
+      ? '<span class="badge badge-canto">' + esc(p.categoria) + '</span>' : '';
+    var badgeFoto = (!categoriaNoTopo && p.categoria)
+      ? '<span class="badge badge-flutuante">' + esc(p.categoria) + '</span>' : '';
     return '' +
       '<a href="' + linkPost(p) + '" class="card reveal" style="animation-delay:' + (atraso || 0) + 's">' +
         '<div class="thumb" style="aspect-ratio:16/9">' +
           '<div class="ph' + (p.capa ? '' : ' sem-capa') + '"' + (p.capa ? ' style="background-image:url(\'' + esc(p.capa) + '\')"' : '') + '></div>' +
           '<div class="thumb-veu"></div>' +
-          (p.categoria ? '<span class="badge badge-flutuante">' + esc(p.categoria) + '</span>' : '') +
+          badgeFoto +
         '</div>' +
         '<div class="card-corpo">' +
+          badgeFora +
           '<h3 class="font-display card-titulo">' + esc(p.titulo) + '</h3>' +
           '<p class="font-serif card-resumo">' + esc(p.resumo || '') + '</p>' +
           '<p class="meta">' + metaLinha(p, true) + '</p>' +
@@ -331,7 +338,7 @@
 
       alvo.innerHTML = cardDestaque(destaque) +
         '<div class="home-laterais">' +
-        resto.map(function (p, i) { return cardVertical(p, .05 * (i + 1)); }).join('') +
+        resto.map(function (p, i) { return cardVertical(p, .05 * (i + 1), true); }).join('') +
         '</div>';
 
       revelar(alvo);

@@ -13,6 +13,9 @@
 .home-laterais .card-titulo{font-size:17.5px;margin-top:9px}
 .home-laterais .card-resumo{-webkit-line-clamp:2;font-size:13.5px}
 .home-laterais .meta{font-size:10px;padding-top:10px!important}
+/* categoria dos cards menores da home: direita, acima do titulo, fora da foto */
+.home-laterais .badge-canto{align-self:flex-end;margin:0 0 8px;max-width:100%;
+  background:rgba(232,64,26,.14);backdrop-filter:none;text-align:right;line-height:1.35}
 .destaque-card{min-height:520px;display:block;position:relative;overflow:hidden}
 .destaque-fundo{position:absolute;inset:0}
 .destaque-fundo .ph{position:absolute;inset:0;background-size:cover;background-position:center 38%;
