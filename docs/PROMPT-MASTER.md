@@ -1,12 +1,13 @@
 # PROMPT MASTER — Lado Esquerdo de Curitiba (site + blog)
 
 > Documento de retomada. Serve para você voltar ao projeto depois de meses, ou para entregar a outro assistente/desenvolvedor e continuar exatamente de onde paramos.
-> Última atualização: **26/10/2026 — versão 3.1.9**
+> Última atualização: **26/10/2026 — versão 3.1.10**
 
 ---
 
 ## 0. Histórico recente
 
+- **3.1.10 (26/10/2026)** — números do Instagram atualizados na home: 289 mil seguidores, 5.361 publicações, 1.627 perfis seguidos. O endpoint `/api/instagram` segue pronto para atualizar sozinho quando as variáveis forem configuradas; sem elas, valem estes números.
 - **3.1.9 (26/10/2026)** — cartões de número ("quadro de estatísticas"): 3 colunas com uma Caixa (/callout) em cada viram uma grade de cartões com barra laranja em cima, número grande e legenda em caixa alta (antes era preciso colar print). Caixa (/callout) solta no texto virou caixa destacada, não mais citação.
 - **3.1.8 (26/10/2026)** — matéria servida do acervo: capa e imagens nunca expiram (antes usavam links do Notion válidos por 1h) e o texto vai no HTML (SEO/LCP). Novas formatações do Notion: **cores de texto/fundo** e **tabelas** (inclusive coladas do Word), além de colunas, to_do e blocos sincronizados.
 - **3.1.7 (23/10/2026)** — aviso de cookies com consentimento real (LGPD): o GA4 só carrega depois do "Aceitar"; nova página `/privacidade`; links "Privacidade" e "Cookies" no rodapé (o de Cookies reabre o aviso).
