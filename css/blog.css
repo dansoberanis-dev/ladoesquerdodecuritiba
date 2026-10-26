@@ -210,3 +210,42 @@
 .destaque-card.sem-capa .destaque-fundo .ph{transition:none}
 .destaque-card.sem-capa:hover .destaque-fundo .ph{transform:none}
 @media(max-width:980px){.destaque-card.sem-capa{min-height:340px}}
+
+/* ---------- cores de texto do Notion (matéria) ----------
+   O Notion permite colorir trechos e parágrafos. Como o site é escuro,
+   as cores de texto viram tons claros e os fundos viram tons translúcidos. */
+.artigo-corpo .lec-txt-gray,.artigo-corpo .lec-txt-gray_background{color:#b9aca4}
+.artigo-corpo .lec-txt-brown{color:#d3a184}
+.artigo-corpo .lec-txt-orange{color:#ff9a4d}
+.artigo-corpo .lec-txt-yellow{color:#ffd166}
+.artigo-corpo .lec-txt-green{color:#7fd18f}
+.artigo-corpo .lec-txt-blue{color:#7fb6ff}
+.artigo-corpo .lec-txt-purple{color:#c3a2ff}
+.artigo-corpo .lec-txt-pink{color:#ff9ec4}
+.artigo-corpo .lec-txt-red{color:#ff8a7a}
+.artigo-corpo .lec-bg-gray{background:rgba(150,140,135,.22);padding:.06em .24em;border-radius:3px}
+.artigo-corpo .lec-bg-brown{background:rgba(163,106,76,.28);padding:.06em .24em;border-radius:3px}
+.artigo-corpo .lec-bg-orange{background:rgba(255,140,26,.24);padding:.06em .24em;border-radius:3px}
+.artigo-corpo .lec-bg-yellow{background:rgba(255,209,102,.22);padding:.06em .24em;border-radius:3px}
+.artigo-corpo .lec-bg-green{background:rgba(126,209,143,.20);padding:.06em .24em;border-radius:3px}
+.artigo-corpo .lec-bg-blue{background:rgba(127,182,255,.20);padding:.06em .24em;border-radius:3px}
+.artigo-corpo .lec-bg-purple{background:rgba(195,162,255,.20);padding:.06em .24em;border-radius:3px}
+.artigo-corpo .lec-bg-pink{background:rgba(255,158,196,.20);padding:.06em .24em;border-radius:3px}
+.artigo-corpo .lec-bg-red{background:rgba(255,138,122,.20);padding:.06em .24em;border-radius:3px}
+.artigo-corpo .lec-tarefa{margin:10px 0 0;color:var(--muted)}
+
+/* ---------- tabelas vindas do Notion (inclusive coladas do Word) ---------- */
+.artigo-corpo .lec-tabela{margin:26px 0;overflow-x:auto;border:1px solid var(--border);
+  border-radius:12px;background:linear-gradient(180deg,rgba(255,236,222,.045),rgba(255,236,222,.012))}
+.artigo-corpo .lec-tabela table{width:100%;border-collapse:collapse;font-family:"Chakra Petch",system-ui,sans-serif;
+  font-size:14px;line-height:1.45;min-width:320px}
+.artigo-corpo .lec-tabela th,.artigo-corpo .lec-tabela td{padding:11px 14px;text-align:left;
+  vertical-align:top;border-bottom:1px solid rgba(255,190,140,.14);color:var(--fg)}
+.artigo-corpo .lec-tabela th{background:rgba(232,64,26,.14);color:#ffd0a3;font-weight:700;
+  letter-spacing:.02em;font-size:12.5px;text-transform:uppercase}
+.artigo-corpo .lec-tabela tbody tr:last-child td,.artigo-corpo .lec-tabela tbody tr:last-child th{border-bottom:0}
+.artigo-corpo .lec-tabela tbody tr:hover td,.artigo-corpo .lec-tabela tbody tr:hover th{background:rgba(255,140,26,.06)}
+@media(max-width:640px){
+  .artigo-corpo .lec-tabela table{font-size:13px}
+  .artigo-corpo .lec-tabela th,.artigo-corpo .lec-tabela td{padding:9px 11px}
+}

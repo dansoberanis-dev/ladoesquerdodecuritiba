@@ -6,7 +6,7 @@ name: Acervo do blog
 
 on:
   schedule:
-    - cron: '0 */3 * * *'   # a cada 3 horas (UTC)
+    - cron: '0 * * * *'     # a cada hora (UTC): encurta a janela em que uma matéria recém-publicada ainda usa link do Notion
   workflow_dispatch:        # permite rodar na mão pela aba Actions
 
 permissions:

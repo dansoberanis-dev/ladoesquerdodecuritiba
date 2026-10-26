@@ -94,3 +94,21 @@ No Notion: `•••` da página → **Trash** → restaure. Não é possível 
 
 **Quem pode publicar?**
 Apenas as contas que você autorizar: você e o seu colaborador direto. Ninguém mais tem acesso ao banco.
+
+---
+
+## Tabelas e cores (novo em 26/10/2026)
+
+**Tabela:** cole a tabela direto do Word ou do Excel, ou crie com **/tabela** (opção *Tabela simples*). Ela passa a aparecer no site como tabela de verdade, com as linhas e colunas alinhadas. Não precisa mais colar print.
+
+- Marque a primeira linha como cabeçalho: clique nos **seis pontinhos** da primeira célula e escolha **Cabeçalho da coluna**. Essa linha sai com fundo laranja no site.
+- No celular a tabela se ajusta e, se for muito larga, desliza para o lado sem quebrar a página.
+- Evite tabela com texto muito longo dentro da célula e evite colocar imagem dentro da célula.
+
+**Cores:** selecione o trecho e escolha a cor no menu do Notion (o **A** com a barrinha colorida). O site reproduz a cor do texto e a cor de fundo.
+
+- As cores fortes do Notion viram tons ajustados para o fundo escuro do site, para continuar legível.
+- Cor aplicada no **bloco inteiro** (parágrafo ou título) também vale: selecione o bloco e escolha a cor.
+- Se um texto sumir na leitura, é sinal de cor muito escura sobre fundo escuro. Troque por uma cor clara.
+
+**Antes de publicar:** dá para conferir o resultado abrindo a matéria no site com o Status em *Publicado* (e voltando para *Rascunho* se precisar ajustar).

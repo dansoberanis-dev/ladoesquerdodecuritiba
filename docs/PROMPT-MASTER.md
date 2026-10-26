@@ -1,12 +1,13 @@
 # PROMPT MASTER — Lado Esquerdo de Curitiba (site + blog)
 
 > Documento de retomada. Serve para você voltar ao projeto depois de meses, ou para entregar a outro assistente/desenvolvedor e continuar exatamente de onde paramos.
-> Última atualização: **23/10/2026 — versão 3.1.7**
+> Última atualização: **26/10/2026 — versão 3.1.8**
 
 ---
 
 ## 0. Histórico recente
 
+- **3.1.8 (26/10/2026)** — matéria servida do acervo: capa e imagens nunca expiram (antes usavam links do Notion válidos por 1h) e o texto vai no HTML (SEO/LCP). Novas formatações do Notion: **cores de texto/fundo** e **tabelas** (inclusive coladas do Word), além de colunas, to_do e blocos sincronizados.
 - **3.1.7 (23/10/2026)** — aviso de cookies com consentimento real (LGPD): o GA4 só carrega depois do "Aceitar"; nova página `/privacidade`; links "Privacidade" e "Cookies" no rodapé (o de Cookies reabre o aviso).
 - **3.1.6 (23/10/2026)** — Google Analytics 4 (`G-K9SEW9QWT7`) ativo nas 4 páginas via `js/analytics.js` (arquivo local, sem script inline), com CSP ajustada para `googletagmanager` e `google-analytics`.
 - **3.1.5 (23/10/2026)** — cards menores da home: a categoria saiu de cima da foto (tapava os rostos) e passou para a direita, acima do título. Card de destaque e página do blog seguem como estavam.

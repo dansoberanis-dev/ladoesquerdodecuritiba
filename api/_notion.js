@@ -206,6 +206,20 @@ const esc = (s) => String(s || '')
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;');
 
+/* Cores do Notion. O Notion usa nomes fixos (red, blue_background, ...);
+   aqui cada um vira uma classe CSS do site (ver css/blog.css). */
+const CORES = new Set([
+  'gray', 'brown', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'red',
+  'gray_background', 'brown_background', 'orange_background', 'yellow_background',
+  'green_background', 'blue_background', 'purple_background', 'pink_background',
+  'red_background',
+]);
+
+function classeCor(cor) {
+  if (!cor || cor === 'default' || !CORES.has(cor)) return '';
+  return cor.endsWith('_background') ? `lec-bg-${cor.replace('_background', '')}` : `lec-txt-${cor}`;
+}
+
 function richText(rt) {
   return (rt || []).map((t) => {
     let txt = esc(t.plain_text);
@@ -216,9 +230,47 @@ function richText(rt) {
     if (a.italic) txt = `<em>${txt}</em>`;
     if (a.strikethrough) txt = `<s>${txt}</s>`;
     if (a.underline) txt = `<u>${txt}</u>`;
+    const cor = classeCor(a.color);
+    if (cor) txt = `<span class="${cor}">${txt}</span>`;
     if (t.href) txt = `<a href="${esc(t.href)}" target="_blank" rel="noopener noreferrer">${txt}</a>`;
     return txt;
   }).join('');
+}
+
+/* cor escolhida no bloco inteiro (parágrafo, título, citação) */
+function comCor(html, cor) {
+  const c = classeCor(cor);
+  if (!c || !String(html || '').trim()) return html;
+  return `<span class="${c}">${html}</span>`;
+}
+
+/* ---------- tabelas ---------- */
+function linhasDaTabela(b) {
+  const filhos = Array.isArray(b.children) ? b.children : [];
+  return filhos.filter((f) => f && f.type === 'table_row');
+}
+
+function tabelaParaHtml(b) {
+  const dados = b.table || {};
+  const linhas = linhasDaTabela(b);
+  if (!linhas.length) return '';
+  const cabecalho = !!dados.has_column_header;
+  const primeiraColunaCabecalho = !!dados.has_row_header;
+
+  const celula = (conteudo, tag) => `<${tag}>${conteudo || ''}</${tag}>`;
+  const corpo = linhas.map((linha, i) => {
+    const celulas = (linha.table_row && linha.table_row.cells) || [];
+    const tag = cabecalho && i === 0 ? 'th' : 'td';
+    const tds = celulas.map((c, j) => {
+      const tagFinal = tag === 'th' || (primeiraColunaCabecalho && j === 0) ? 'th' : 'td';
+      return celula(richText(c), tagFinal);
+    }).join('');
+    return `<tr>${tds}</tr>`;
+  });
+
+  const thead = cabecalho ? `<thead>${corpo[0]}</thead>` : '';
+  const tbody = `<tbody>${(cabecalho ? corpo.slice(1) : corpo).join('')}</tbody>`;
+  return `<div class="lec-tabela"><table>${thead}${tbody}</table></div>`;
 }
 
 function imagemDoBloco(b) {
@@ -249,17 +301,37 @@ export function blocosParaHtml(blocos) {
     switch (tipo) {
       case 'paragraph': {
         const t = richText(dados.rich_text);
-        if (t.trim()) html += `<p>${t}</p>`;
+        if (t.trim()) html += `<p>${comCor(t, dados.color)}</p>`;
         break;
       }
       case 'heading_1':
-        html += `<h2>${richText(dados.rich_text)}</h2>`;
+        html += `<h2>${comCor(richText(dados.rich_text), dados.color)}</h2>`;
         break;
       case 'heading_2':
-        html += `<h2>${richText(dados.rich_text)}</h2>`;
+        html += `<h2>${comCor(richText(dados.rich_text), dados.color)}</h2>`;
         break;
       case 'heading_3':
-        html += `<h3>${richText(dados.rich_text)}</h3>`;
+        html += `<h3>${comCor(richText(dados.rich_text), dados.color)}</h3>`;
+        break;
+      case 'table':
+        html += tabelaParaHtml(b);
+        break;
+      case 'table_row': {
+        // só aparece aqui se vier solta (sem o bloco "table" acima)
+        const celulas = (dados.cells || []).map((c) => `<td>${richText(c)}</td>`).join('');
+        if (celulas) html += `<div class="lec-tabela"><table><tbody><tr>${celulas}</tr></tbody></table></div>`;
+        break;
+      }
+      case 'to_do': {
+        const t = richText(dados.rich_text);
+        if (t.trim()) html += `<p class="lec-tarefa">${dados.checked ? '☑' : '☐'} ${t}</p>`;
+        break;
+      }
+      case 'column_list':
+      case 'column':
+      case 'synced_block':
+        // colunas: junta o conteúdo na ordem em que aparece
+        html += blocosParaHtml(b.children || []);
         break;
       case 'bulleted_list_item': {
         const item = richText(dados.rich_text);
@@ -278,7 +350,7 @@ export function blocosParaHtml(blocos) {
       }
         break;
       case 'quote':
-        html += `<blockquote>${richText(dados.rich_text)}</blockquote>`;
+        html += `<blockquote>${comCor(richText(dados.rich_text), dados.color)}</blockquote>`;
         break;
       case 'callout':
         html += `<blockquote>${dados.icon?.emoji ? dados.icon.emoji + ' ' : ''}${richText(dados.rich_text)}</blockquote>`;
@@ -313,6 +385,13 @@ export function blocosParaHtml(blocos) {
         break;
       }
       default:
+        // tipo desconhecido (bloco novo do Notion): não perde o conteúdo,
+        // desenha os filhos e, se houver texto solto, mostra como parágrafo
+        if (dados.rich_text && dados.rich_text.length) {
+          const t = richText(dados.rich_text);
+          if (t.trim()) html += `<p>${comCor(t, dados.color)}</p>`;
+        }
+        if (b.children && b.children.length) html += blocosParaHtml(b.children);
         break;
     }
   }
@@ -425,6 +504,21 @@ export async function listarPaginas() {
   return posts;
 }
 
+/** blocos filhos que a API não devolve junto (tabelas, colunas, blocos sincronizados) */
+const COM_FILHOS = new Set(['table', 'column_list', 'column', 'synced_block']);
+
+async function filhosDoBloco(id, token) {
+  let blocos = [];
+  let cursor;
+  do {
+    const q = cursor ? `?page_size=100&start_cursor=${cursor}` : '?page_size=100';
+    const r = await notion(`/blocks/${id}/children${q}`, { token });
+    blocos = blocos.concat(r.results || []);
+    cursor = r.has_more ? r.next_cursor : undefined;
+  } while (cursor);
+  return blocos;
+}
+
 export async function blocosDaPagina(pageId, token) {
   let blocos = [];
   let cursor;
@@ -434,6 +528,21 @@ export async function blocosDaPagina(pageId, token) {
     blocos = blocos.concat(r.results || []);
     cursor = r.has_more ? r.next_cursor : undefined;
   } while (cursor);
+
+  // busca os filhos de tabelas e colunas (até 3 níveis: coluna_list > column > conteúdo)
+  async function completar(lista, nivel) {
+    if (!lista || !lista.length || nivel > 3) return;
+    for (const b of lista) {
+      if (!b || !COM_FILHOS.has(b.type) || !b.has_children) continue;
+      try {
+        b.children = await filhosDoBloco(b.id, token);
+        await completar(b.children, nivel + 1);
+      } catch (e) {
+        b.children = [];
+      }
+    }
+  }
+  await completar(blocos, 1);
   return blocos;
 }
 

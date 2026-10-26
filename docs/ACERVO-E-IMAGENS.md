@@ -109,3 +109,16 @@ Passos: salvar a foto em `conteudo/img/<slug>/`, colar o item no `posts.json` (l
 - **A pasta `conteudo/` não vai nos ZIPs de atualização.** Quem manda nela é o robô; sobrescrever com uma versão antiga apagaria conteúdo.
 - **Notion não é apagado nem alterado** em nenhum momento. O acervo é uma cópia de leitura.
 - **Imagem trocada no Notion:** vira um arquivo novo (`capa-1.jpg`) na próxima sincronização; a antiga pode ficar órfã na pasta. Não quebra nada — é só histórico.
+
+---
+
+## O que mudou na versão 3.1.8 (26/10/2026)
+
+Antes, a página da matéria ainda podia buscar capa e imagens no Notion, por **links que expiram em 1 hora**. Agora a ordem é esta:
+
+1. **Acervo primeiro.** A página da matéria é montada a partir de `conteudo/posts.json`: título, resumo, categoria, data, assinatura, capa e corpo com as imagens locais. O texto já vai dentro do HTML, então o Google e as prévias de link (WhatsApp, Instagram) leem tudo sem executar JavaScript.
+2. **Notion só como reserva.** Se a matéria ainda não foi espelhada (publicada há menos de 1 hora), a página busca no Notion e continua funcionando normalmente.
+3. **`og:image` também vem do acervo.** A imagem de prévia em redes sociais não expira mais em 1 hora.
+4. **Espelho de hora em hora.** O Actions deixou de rodar a cada 3 horas e passou a rodar a cada hora, para que a matéria recém-publicada ganhe imagens permanentes rápido.
+
+Regra prática: matéria publicada agora fica **totalmente independente do Notion em cerca de 1 hora**. Se precisar de imediato, abra **Actions → "Acervo do blog" → Run workflow**.

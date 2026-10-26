@@ -137,6 +137,105 @@ export function injetar(html, meta) {
   return html.slice(0, ini) + head + html.slice(fim);
 }
 
+/**
+ * Conteúdo da matéria vindo do acervo (conteudo/posts.json).
+ * Vantagem sobre /api/post: as imagens já estão dentro do site (não expiram)
+ * e o texto pode ir no HTML, o que o Google enxerga sem rodar JavaScript.
+ */
+async function materiaDoAcervo(slug, origem) {
+  if (!slug) return null;
+  try {
+    const r = await fetch(`${origem}/conteudo/posts.json`, { headers: { 'x-og-raw': '1' } });
+    if (!r.ok) return null;
+    const j = await r.json();
+    const lista = Array.isArray(j) ? j : j && Array.isArray(j.posts) ? j.posts : [];
+    const achado = lista.find((p) => p && p.slug === slug && p.publicado !== false);
+    if (!achado) return null;
+    return {
+      slug: achado.slug,
+      titulo: achado.titulo,
+      resumo: achado.resumo,
+      categoria: achado.categoria,
+      capa: achado.capa,
+      capaCredito: achado.capaCredito,
+      data: achado.data,
+      autor: achado.autor,
+      autorPadrao: achado.autorPadrao !== false,
+      corpo: achado.corpo || '',
+    };
+  } catch (e) {
+    return null;
+  }
+}
+
+/** HTML da matéria já pronto, idêntico ao que o js/blog.js desenha (evita piscar). */
+function dataLonga(iso) {
+  const d = iso ? new Date(/^\d{4}-\d{2}-\d{2}$/.test(iso) ? iso + 'T12:00:00' : iso) : null;
+  if (!d || isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function minutosDeLeitura(corpo, resumo) {
+  if (!corpo) return null;
+  const blocos = String(corpo).split(/<\/p>/i).concat(String(resumo || '').split(/<\/p>/i));
+  const palavras = blocos.join(' ').replace(/<[^>]+>/g, ' ').trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.round(palavras / 200));
+}
+
+function corpoDaMateria(d, urlFinal) {
+  if (!d) return '';
+  const AUTOR_PADRAO = 'Redação Lado Esquerdo de Curitiba';
+  const capa = d.capa
+    ? `<figure class="artigo-capa"><img src="${escUrl(d.capa)}" alt="${esc(d.titulo || '')}">${
+        d.capaCredito ? `<figcaption>${esc(d.capaCredito)}</figcaption>` : ''
+      }</figure>`
+    : '';
+  const temNome = d.autor && String(d.autor).trim();
+  const padrao = d.autorPadrao !== false || !temNome;
+  const assinatura = padrao
+    ? `<span class="assinatura-padrao">${esc(AUTOR_PADRAO)}</span>`
+    : `<span class="assinatura-nome">Por <strong>${esc(d.autor)}</strong></span>`;
+  const dia = dataLonga(d.data);
+  const min = minutosDeLeitura(d.corpo, d.resumo);
+  const dataCurta = dia + (min ? ' · ' + min + ' min de leitura' : '');
+  const link = urlFinal || '';
+  return (
+    '<nav class="artigo-migalha meta"><a href="/">Início</a> / <a href="/blog">Blog</a> / ' +
+    `<span>${esc(d.categoria || 'Matéria')}</span></nav>` +
+    '<div class="artigo-cabeca">' +
+    (d.categoria ? `<span class="badge">${esc(d.categoria)}</span>` : '') +
+    `<h1 class="font-display artigo-titulo">${esc(d.titulo || '')}</h1>` +
+    `<p class="font-serif artigo-linha-fina">${esc(d.resumo || '')}</p>` +
+    `<div class="artigo-assinatura">${assinatura}<span class="meta">${esc(dataCurta)}</span></div>` +
+    '</div>' +
+    capa +
+    `<div class="artigo-corpo font-serif">${d.corpo || '<p>Conteúdo em preparação.</p>'}</div>` +
+    '<footer class="artigo-rodape">' +
+    `<p class="meta">Publicado em ${esc(dia)}</p>` +
+    '<div class="artigo-compartilhar"><span class="meta">Compartilhar:</span>' +
+    `<a class="btn-ghost btn-mini" target="_blank" rel="noopener noreferrer" href="https://wa.me/?text=${escUrl(
+      encodeURIComponent((d.titulo || '') + ' ' + link)
+    )}">WhatsApp</a>` +
+    `<a class="btn-ghost btn-mini" target="_blank" rel="noopener noreferrer" href="https://twitter.com/intent/tweet?text=${escUrl(
+      encodeURIComponent(d.titulo || '')
+    )}&url=${escUrl(encodeURIComponent(link))}">X</a>` +
+    '</div></footer>' +
+    '<div class="artigo-voltar"><a class="link-fire" href="/blog">← Voltar para todas as matérias</a></div>'
+  );
+}
+
+/** troca o "Carregando" pelo conteúdo real dentro de <div id="artigo"> */
+function injetarCorpo(html, conteudo) {
+  if (!conteudo) return html;
+  const marca = '<div id="artigo">';
+  const i = html.indexOf(marca);
+  if (i === -1) return html;
+  const inicio = i + marca.length;
+  const fim = html.indexOf('</div>', inicio);
+  if (fim === -1) return html;
+  return html.slice(0, inicio) + conteudo + html.slice(fim);
+}
+
 /* ------------------------------------------------------------------ entrada */
 
 export default async function middleware(req) {
@@ -168,8 +267,11 @@ export default async function middleware(req) {
     return seguir();
   }
 
-  let dados = null;
-  if (slug) {
+  // 1) acervo (imagens locais, texto no HTML) — é a fonte preferencial
+  let dados = await materiaDoAcervo(slug, origem);
+
+  // 2) matéria ainda não espelhada: busca no Notion, como antes
+  if (!dados && slug) {
     try {
       const r = await fetch(`${origem}/api/post?slug=${encodeURIComponent(slug)}`);
       if (r.ok) {
@@ -181,7 +283,8 @@ export default async function middleware(req) {
     }
   }
 
-  const corpo = injetar(html, montarMeta(dados, urlFinal));
+  let corpo = injetar(html, montarMeta(dados, urlFinal));
+  if (dados && dados.corpo) corpo = injetarCorpo(corpo, corpoDaMateria(dados, urlFinal));
   return new Response(corpo, {
     status: 200,
     headers: {

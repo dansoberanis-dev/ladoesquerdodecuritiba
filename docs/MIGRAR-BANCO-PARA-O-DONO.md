@@ -184,3 +184,59 @@ O `slug` vem do **título**, não do banco. Ao duplicar para o Notion dele, os e
 | Card sem texto | **Resumo** vazio | preencher o Resumo |
 | Variável nova não tem efeito | faltou redeploy | Deployments → Redeploy |
 | Home com manchete trocada | matéria dele com **Destaque** marcado | deixar só uma marcada |
+
+---
+
+# PARTE 3 — Consolidar tudo na conta `ladoesquerdodecuritiba@gmail.com`
+
+> Ideia registrada em 23/10/2026: usar o Gmail que já controla Search Console e Analytics
+> também no Notion, isolando a conta pessoal do prestador. **É possível e nada se perde.**
+
+## 3.1 Por que o conteúdo não some
+
+O site **não sabe quem criou a matéria**. Ele lê o banco pela **integração** (o token). Enquanto o banco existir e a integração tiver acesso, o site mostra tudo igual — mudar de conta, de workspace ou duplicar as páginas não altera nenhuma matéria.
+
+O que muda ao trocar de workspace é apenas **o token**: uma integração do Notion pertence ao workspace onde foi criada. Token do workspace antigo **não enxerga** páginas do workspace novo (responde 404).
+
+## 3.2 Ordem segura (o site não sai do ar em nenhum passo)
+
+**Regra de ouro: nunca apagar nada no workspace antigo antes de o novo estar publicado e conferido.**
+
+1. **Criar o workspace novo** com o Gmail.
+2. **Levar o banco para lá**, com uma destas opções:
+   - `•••` do banco → **Mover para** → workspace novo (preserva tudo, inclusive as páginas);
+   - ou **Duplicar como modelo** (Parte 1 deste documento) e duplicar no workspace novo.
+3. **Criar a conexão/integração no workspace novo** (`notion.so/my-integrations` → New connection → API token), nome `Site Lado Esquerdo 2`.
+4. **Conectar a integração ao banco**: `•••` → Conexões → adicionar.
+5. Na Vercel, **adicionar como segunda fonte** — não substituir:
+   - `NOTION_TOKEN_2` = token `ntn_...` do workspace novo
+   - `NOTION_DATABASE_ID_2` = ID do banco novo (32 caracteres)
+   - **Redeploy** obrigatório.
+6. Rodar `/api/posts` e conferir `fontesOk: [1, 2]`. Nesse momento **as duas fontes respondem** e o acervo enxerga os mesmos slugs nas duas — nada é despublicado.
+7. Rodar o Actions **Acervo do blog** e conferir que todas as matérias continuam no site.
+8. Publicar uma matéria de teste pelo workspace novo e ver aparecer.
+9. **Só então** remover a fonte 1: apagar `NOTION_TOKEN` e `NOTION_DATABASE_ID` (ou renomear as variáveis `_2` para os nomes principais) e fazer **Redeploy**.
+10. Por último, arquivar/limpar o banco antigo.
+
+> Se em vez de duas fontes você simplesmente trocar o token de uma vez, existe uma janela em que o acervo pode marcar matérias como não publicadas — porque ele vê o slug desaparecer quando todas as fontes respondem. A ordem acima evita isso.
+
+## 3.3 Dois pontos que quebram a virada se passarem batido
+
+**1. `NOTION_CRIADORES_PERMITIDOS`**
+Se essa variável existir na Vercel com o seu nome ou o seu ID de usuário do Notion, depois da troca **as matérias do workspace novo podem ser bloqueadas** (a lista compara nome e ID do criador). Antes da virada, confira: ou remova a variável, ou coloque o nome do dono.
+
+**2. Autoria exibida**
+Com `NOTION_AUTOR_AUTOMATICO` ausente, tudo que estiver com o campo **Autor** vazio sai como "Redação Lado Esquerdo de Curitiba" — o que é o desejado. Se essa variável estiver como `true`, as matérias passariam a assinar a conta que criou (o Gmail), o que não serve. Conferir e deixar desligada.
+
+## 3.4 Nada muda no GitHub Actions
+
+O sincronizador não fala com o Notion diretamente: ele lê de `https://.../api/posts`, que é a Vercel. Ou seja, **trocado o token na Vercel, o acervo já está apontado para o workspace novo**. Nenhum segredo no GitHub precisa ser mexido.
+
+## 3.5 Segurança: um Gmail vira a chave de tudo
+
+Com Notion + Search Console + Analytics no mesmo endereço, essa conta passa a ser o bem mais crítico do projeto.
+
+- **Verificação em duas etapas por aplicativo** (não por SMS), com o telefone de recuperação **do dono**.
+- Guardar os **códigos de backup** impressos com o dono.
+- O prestador entra como **membro do workspace** (para manutenção), nunca como dono e nunca por compartilhamento de senha.
+- Se o token da integração vazar, revogar e gerar outro — não derruba nenhuma matéria, só exige novo redeploy.
