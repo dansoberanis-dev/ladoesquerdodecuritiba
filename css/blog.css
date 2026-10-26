@@ -249,3 +249,44 @@
   .artigo-corpo .lec-tabela table{font-size:13px}
   .artigo-corpo .lec-tabela th,.artigo-corpo .lec-tabela td{padding:9px 11px}
 }
+
+/* ---------- cartões de número (3 colunas com Caixa no Notion) ----------
+   Receita no Notion: /3 colunas e, em cada uma, uma Caixa (/callout) com o
+   número em negrito e, na linha de baixo (Shift+Enter), a legenda. */
+.artigo-corpo .lec-cards{
+  display:grid;gap:12px;margin:26px 0;
+  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+}
+.artigo-corpo .lec-card{
+  position:relative;overflow:hidden;
+  background:linear-gradient(180deg,rgba(255,236,222,.065),rgba(255,236,222,.02));
+  border:1px solid var(--border);border-radius:12px;padding:17px 18px 15px;
+}
+.artigo-corpo .lec-card::before{
+  content:"";position:absolute;left:0;top:0;width:100%;height:4px;
+  background:linear-gradient(90deg,var(--fire),var(--fire-mid) 45%,var(--amber));
+}
+.artigo-corpo .lec-card-numero{
+  margin:2px 0 6px;font-family:"Chakra Petch",system-ui,sans-serif;font-weight:700;
+  font-size:clamp(21px,4.6vw,28px);line-height:1.06;letter-spacing:-.01em;color:var(--fg);
+}
+.artigo-corpo .lec-card-legenda{
+  margin:0;font-family:"Chakra Petch",system-ui,sans-serif;font-size:10.5px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--muted);line-height:1.45;
+}
+@media(max-width:640px){
+  .artigo-corpo .lec-cards{grid-template-columns:repeat(auto-fit,minmax(136px,1fr));gap:10px}
+  .artigo-corpo .lec-card{padding:14px 13px 13px;border-radius:10px}
+  .artigo-corpo .lec-card-legenda{font-size:9.5px;letter-spacing:.08em}
+}
+
+/* ---------- caixa (callout) solta no meio do texto ---------- */
+.artigo-corpo .lec-caixa{
+  display:flex;gap:11px;align-items:flex-start;margin:24px 0;padding:15px 17px;
+  background:rgba(232,64,26,.09);border:1px solid rgba(232,64,26,.28);
+  border-left:3px solid var(--fire-mid);border-radius:10px;
+}
+.artigo-corpo .lec-caixa-icone{font-size:17px;line-height:1.35;flex:0 0 auto}
+.artigo-corpo .lec-caixa-texto{flex:1 1 auto;min-width:0}
+.artigo-corpo .lec-caixa-texto p{margin:0 0 8px}
+.artigo-corpo .lec-caixa-texto p:last-child,.artigo-corpo .lec-caixa-texto>:last-child{margin-bottom:0}

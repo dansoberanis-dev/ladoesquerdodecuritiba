@@ -112,3 +112,31 @@ Apenas as contas que você autorizar: você e o seu colaborador direto. Ninguém
 - Se um texto sumir na leitura, é sinal de cor muito escura sobre fundo escuro. Troque por uma cor clara.
 
 **Antes de publicar:** dá para conferir o resultado abrindo a matéria no site com o Status em *Publicado* (e voltando para *Rascunho* se precisar ajustar).
+
+---
+
+## Quadro de números (os cartões de estatística)
+
+É aquele trio de quadros com um número grande e uma legenda embaixo. No Notion, faça assim:
+
+1. Digite `/3 colunas` e dê Enter. Aparecem três colunas lado a lado.
+2. Clique na primeira coluna, digite `/caixa` e escolha **Caixa** (o bloco com um emoji e fundo colorido).
+3. Escreva o número (exemplo: `425.092`) em negrito. Aperte **Shift + Enter** e escreva a legenda na linha de baixo (exemplo: `VOTOS DE LULA EM CWB (37,71%)`).
+4. Repita nas outras duas colunas.
+5. Pronto. No site isso vira três cartões com a barra laranja em cima, o número grande e a legenda em caixa alta. No celular ficam dois em cima e um embaixo.
+
+Regras para sair bonito:
+
+- **O número tem que ser a primeira linha** da caixa e a legenda vem depois, no Shift + Enter.
+- O emoji da caixa não aparece no cartão, ele serve só para o Notion não parecer vazio.
+- Funciona com 2, 3 ou 4 colunas.
+- Se uma coluna ficar vazia, ela é ignorada.
+- Se as colunas **não** tiverem Caixa em todas, o site mostra o texto corrido, sem cartões. É o sinal de que faltou colocar a caixa.
+
+## Caixa de aviso no meio do texto
+
+Uma Caixa sozinha (fora das colunas) vira uma faixa destacada com barra laranja na esquerda. Serve para aviso, correção, nota do editor. O emoji aparece no começo.
+
+## Atalho que também funciona
+
+Se preferir não usar colunas, cole a tabela do Word: ela sai como tabela de verdade no site (cabeçalho laranja, linhas zebradas, rolagem no celular). A diferença é que tabela mostra dados alinhados, e o quadro de números mostra os destaques em cartões.

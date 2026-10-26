@@ -286,6 +286,68 @@ function imagemDoBloco(b) {
 }
 
 /** converte blocos do Notion em HTML, preservando ordem, listas e imagens */
+/**
+ * Cartões de número (o "quadro de estatísticas" que o dono usa nas matérias).
+ *
+ * No Notion o desenho é: 3 colunas, cada uma com uma CAIXA (/callout) contendo
+ * o número em negrito e, na linha de baixo (Shift+Enter), a legenda.
+ * A API entrega isso como column_list > column > callout, e aqui vira uma
+ * grade de cartões com a barra laranja em cima, como no documento original.
+ */
+function linhasDoTexto(rich) {
+  const linhas = [];
+  (rich || []).forEach((t) => {
+    String(t.plain_text || '').split('\n').forEach((l) => {
+      const limpo = l.trim();
+      if (limpo) linhas.push(limpo);
+    });
+  });
+  return linhas;
+}
+
+function cartaoDaColuna(coluna) {
+  const filhos = (coluna && coluna.children) || [];
+  const caixa = filhos.find((f) => f.type === 'callout');
+  if (!caixa) return null;
+  const dados = caixa.callout || {};
+  const linhas = linhasDoTexto(dados.rich_text);
+  // parágrafos soltos dentro da caixa ou na mesma coluna também entram
+  const extras = (caixa.children || []).concat(filhos.filter((f) => f !== caixa));
+  extras.forEach((f) => {
+    if (f.type !== 'paragraph') return;
+    linhasDoTexto((f.paragraph || {}).rich_text).forEach((l) => linhas.push(l));
+  });
+  if (!linhas.length) return null;
+  return { numero: linhas[0], legenda: linhas.slice(1).join(' ') };
+}
+
+/** devolve a lista de cartões só quando TODAS as colunas estão em formato de caixa */
+function cartoesDaLista(lista) {
+  const colunas = ((lista && lista.children) || [])
+    .filter((c) => c.type === 'column' && (c.children || []).length > 0);
+  if (colunas.length < 2) return null;
+  const cartoes = [];
+  for (const coluna of colunas) {
+    const cartao = cartaoDaColuna(coluna);
+    if (!cartao) return null;
+    cartoes.push(cartao);
+  }
+  return cartoes;
+}
+
+function cartoesParaHtml(cartoes) {
+  const itens = cartoes
+    .map(
+      (c) =>
+        '<div class="lec-card">' +
+        `<p class="lec-card-numero">${esc(c.numero)}</p>` +
+        (c.legenda ? `<p class="lec-card-legenda">${esc(c.legenda)}</p>` : '') +
+        '</div>'
+    )
+    .join('');
+  return `<div class="lec-cards">${itens}</div>`;
+}
+
 export function blocosParaHtml(blocos) {
   let html = '';
   let lista = null; // 'ul' | 'ol'
@@ -327,10 +389,19 @@ export function blocosParaHtml(blocos) {
         if (t.trim()) html += `<p class="lec-tarefa">${dados.checked ? '☑' : '☐'} ${t}</p>`;
         break;
       }
-      case 'column_list':
+      case 'column_list': {
+        // 3 colunas com uma caixa em cada viram cartões de número
+        const cartoes = cartoesDaLista(b);
+        if (cartoes) {
+          html += cartoesParaHtml(cartoes);
+          break;
+        }
+        // colunas comuns: junta o conteúdo na ordem em que aparece
+        html += blocosParaHtml(b.children || []);
+        break;
+      }
       case 'column':
       case 'synced_block':
-        // colunas: junta o conteúdo na ordem em que aparece
         html += blocosParaHtml(b.children || []);
         break;
       case 'bulleted_list_item': {
@@ -352,9 +423,18 @@ export function blocosParaHtml(blocos) {
       case 'quote':
         html += `<blockquote>${comCor(richText(dados.rich_text), dados.color)}</blockquote>`;
         break;
-      case 'callout':
-        html += `<blockquote>${dados.icon?.emoji ? dados.icon.emoji + ' ' : ''}${richText(dados.rich_text)}</blockquote>`;
+      case 'callout': {
+        const texto = richText(dados.rich_text);
+        const dentro = blocosParaHtml(b.children || []);
+        if (!texto.trim() && !dentro) break;
+        const icone = dados.icon?.emoji ? `<span class="lec-caixa-icone">${esc(dados.icon.emoji)}</span>` : '';
+        html +=
+          `<div class="lec-caixa">${icone}<div class="lec-caixa-texto">` +
+          (texto.trim() ? `<p>${comCor(texto, dados.color)}</p>` : '') +
+          dentro +
+          '</div></div>';
         break;
+      }
       case 'image':
         html += imagemDoBloco(b);
         break;
