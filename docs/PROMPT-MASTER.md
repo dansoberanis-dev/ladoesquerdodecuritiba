@@ -1,12 +1,13 @@
 # PROMPT MASTER — Lado Esquerdo de Curitiba (site + blog)
 
 > Documento de retomada. Serve para você voltar ao projeto depois de meses, ou para entregar a outro assistente/desenvolvedor e continuar exatamente de onde paramos.
-> Última atualização: **26/10/2026 — versão 3.1.10**
+> Última atualização: **27/10/2026 — versão 3.1.11**
 
 ---
 
 ## 0. Histórico recente
 
+- **3.1.11 (27/10/2026)** — números do Instagram atualizados: 290 mil seguidores, 5.412 publicações, 1.636 perfis seguidos.
 - **3.1.10 (26/10/2026)** — números do Instagram atualizados na home: 289 mil seguidores, 5.361 publicações, 1.627 perfis seguidos. O endpoint `/api/instagram` segue pronto para atualizar sozinho quando as variáveis forem configuradas; sem elas, valem estes números.
 - **3.1.9 (26/10/2026)** — cartões de número ("quadro de estatísticas"): 3 colunas com uma Caixa (/callout) em cada viram uma grade de cartões com barra laranja em cima, número grande e legenda em caixa alta (antes era preciso colar print). Caixa (/callout) solta no texto virou caixa destacada, não mais citação.
 - **3.1.8 (26/10/2026)** — matéria servida do acervo: capa e imagens nunca expiram (antes usavam links do Notion válidos por 1h) e o texto vai no HTML (SEO/LCP). Novas formatações do Notion: **cores de texto/fundo** e **tabelas** (inclusive coladas do Word), além de colunas, to_do e blocos sincronizados.
@@ -107,6 +108,7 @@ SITEARENA/
 ├── assets/img/           logo, chama, favicon, og-padrao.jpg, imagens de exemplo
 ├── assets/blog/          posts.json e posts.js de exemplo
 ├── docs/                 manuais (editor, alimentação, publicação sem Notion)
+│                         MANUAL-DE-PUBLICACAO.html e .pdf = manual ilustrado para o dono
 ├── VERSION               versão atual
 ├── vercel.json           headers, cache, cleanUrls
 └── package.json          dependência @vercel/functions
