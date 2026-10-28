@@ -13,7 +13,7 @@
    EXIGIR_CONSENTIMENTO para false (uma linha).
 ------------------------------------------------------------------ */
 (function () {
-  var ID = 'G-K9SEW9QWT7';
+  var ID = 'G-KRSHM9HXMT';
   var CHAVE = 'lec-consentimento';
   var EXIGIR_CONSENTIMENTO = true;
 
