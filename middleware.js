@@ -138,6 +138,23 @@ export function injetar(html, meta) {
 }
 
 /**
+ * Endereços antigos de matérias cujo Slug foi corrigido no Notion.
+ * O link antigo redireciona para o novo, mas SÓ quando a matéria nova já
+ * existe no acervo. Assim o endereço velho nunca cai em "não encontrada".
+ */
+const SLUGS_ANTIGOS = {
+  'flavio/bolsonaro/fuga/eua': 'flavio-bolsonaro-fuga-eua',
+};
+
+/** compara sem acento, sem maiúscula e sem espaço sobrando */
+function chaveSlug(s) {
+  return String(s || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .trim();
+}
+
+/**
  * Conteúdo da matéria vindo do acervo (conteudo/posts.json).
  * Vantagem sobre /api/post: as imagens já estão dentro do site (não expiram)
  * e o texto pode ir no HTML, o que o Google enxerga sem rodar JavaScript.
@@ -265,6 +282,12 @@ export default async function middleware(req) {
     if (!html || html.indexOf('js/blog.js') === -1) return seguir();
   } catch (e) {
     return seguir();
+  }
+
+  // 0) link de endereço antigo: manda para o Slug novo, se ele já existir
+  const slugNovo = slug ? SLUGS_ANTIGOS[chaveSlug(slug)] : null;
+  if (slugNovo && (await materiaDoAcervo(slugNovo, origem))) {
+    return Response.redirect(`${SITE}/artigo?slug=${encodeURIComponent(slugNovo)}`, 308);
   }
 
   // 1) acervo (imagens locais, texto no HTML) — é a fonte preferencial

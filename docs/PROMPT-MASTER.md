@@ -1,12 +1,13 @@
 # PROMPT MASTER — Lado Esquerdo de Curitiba (site + blog)
 
 > Documento de retomada. Serve para você voltar ao projeto depois de meses, ou para entregar a outro assistente/desenvolvedor e continuar exatamente de onde paramos.
-> Última atualização: **28/10/2026 — versão 3.1.12**
+> Última atualização: **28/10/2026 — versão 3.1.13**
 
 ---
 
 ## 0. Histórico recente
 
+- **3.1.13 (28/10/2026)** — redirecionamento de endereço antigo no `middleware.js` (`SLUGS_ANTIGOS`): quando o Slug de uma matéria é corrigido no Notion, o link velho passa a redirecionar (308) para o novo, **mas só depois** que a matéria nova existe no acervo, então não existe janela de "matéria não encontrada". Primeiro caso: `Flávio/Bolsonaro/Fuga/EUA` → `flavio-bolsonaro-fuga-eua`. Comparação sem acento e sem maiúscula, aceita URL codificada.
 - **3.1.12 (28/10/2026)** — medição migrada para a propriedade do cliente: o ID do GA4 passou de `G-K9SEW9QWT7` (conta antiga, sem acesso pelo dono) para **`G-KRSHM9HXMT`**, que é a propriedade visível no Gmail do projeto. Teste em produção confirmou: sem aceitar cookies não sai requisição; ao aceitar, o evento chega ao Google (204).
 - **3.1.11 (27/10/2026)** — números do Instagram atualizados: 290 mil seguidores, 5.412 publicações, 1.636 perfis seguidos.
 - **3.1.10 (26/10/2026)** — números do Instagram atualizados na home: 289 mil seguidores, 5.361 publicações, 1.627 perfis seguidos. O endpoint `/api/instagram` segue pronto para atualizar sozinho quando as variáveis forem configuradas; sem elas, valem estes números.
