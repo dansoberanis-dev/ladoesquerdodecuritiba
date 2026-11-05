@@ -312,7 +312,8 @@
 
 /* faixa da esteira: sangra até a borda e esconde o excesso */
 .esteira{
-  position:relative;overflow:hidden;
+  position:relative;overflow-x:auto;overflow-y:hidden;
+  scrollbar-width:none;-ms-overflow-style:none;
   padding:6px 0 10px;
   -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 46px,#000 calc(100% - 46px),transparent 100%);
           mask-image:linear-gradient(90deg,transparent 0,#000 46px,#000 calc(100% - 46px),transparent 100%);
@@ -321,14 +322,28 @@
   display:flex;gap:16px;width:max-content;
   padding-inline:26px;             /* alinha o 1º card com o .wrap */
   will-change:transform;
+  touch-action:pan-y;              /* arrastar na horizontal é da esteira; rolar a página continua normal */
+  cursor:grab;
+  -webkit-user-select:none;user-select:none;
 }
-.esteira.girando .esteira-trilha{animation:esteira-corre var(--dur,40s) linear infinite}
-.esteira.girando:hover .esteira-trilha,
-.esteira.girando:focus-within .esteira-trilha{animation-play-state:paused}
-@keyframes esteira-corre{
-  from{transform:translate3d(0,0,0)}
-  to{transform:translate3d(calc(var(--larg,-50%) * -1),0,0)}
+.esteira[data-pronto] .esteira-trilha{transform:translate3d(0,0,0)}
+.esteira-trilha.arrastando{cursor:grabbing}
+.esteira[data-pronto]{overflow:hidden}
+.esteira::-webkit-scrollbar{display:none}
+
+/* botões de avançar e voltar: só existem quando os cards não cabem */
+.esteira-nav{display:flex;gap:10px;justify-content:center;margin:16px 0 0}
+.esteira-nav[hidden]{display:none}
+.esteira-btn{
+  width:42px;height:42px;padding:0;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,236,222,.04);border:1px solid var(--border);color:var(--amber-soft);
+  cursor:pointer;
+  transition:border-color .3s var(--ease),color .3s var(--ease),background .3s var(--ease),transform .2s var(--ease);
 }
+.esteira-btn:hover{border-color:rgba(255,168,110,.42);color:var(--flame);background:rgba(255,140,26,.1)}
+.esteira-btn:active{transform:scale(.93)}
+.esteira-btn:focus-visible{outline:2px solid var(--amber-soft);outline-offset:3px}
 
 /* card */
 .apoia-card{
@@ -367,8 +382,8 @@
   .apoia-logo,.apoia-logo img{max-height:56px;height:56px}
   .apoia-nome{font-size:9px;letter-spacing:.13em}
 }
-/* quem pediu menos movimento no sistema vê a faixa parada e rolável */
+/* quem pediu menos movimento no sistema vê a faixa parada,
+   mas continua podendo arrastar e usar os botões */
 @media (prefers-reduced-motion: reduce){
-  .esteira.girando .esteira-trilha{animation:none}
-  .esteira{overflow-x:auto}
+  .esteira-trilha{scroll-behavior:auto}
 }

@@ -27,8 +27,8 @@
 <meta name="theme-color" content="#120c0a"/>
 <link rel="icon" type="image/png" href="assets/img/favicon.png"/>
 <link rel="apple-touch-icon" href="assets/img/favicon.png"/>
-<link rel="stylesheet" href="css/estilos.css?v=324">
-<link rel="stylesheet" href="css/blog.css?v=324">
+<link rel="stylesheet" href="css/estilos.css?v=325">
+<link rel="stylesheet" href="css/blog.css?v=325">
 <style>
 /* acessibilidade que NÃO pode depender do cache do CSS externo */
 .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
@@ -69,7 +69,7 @@
   #avisoCookies .ck-btn{padding:12px 10px;font-size:10px;text-align:center}
 }
 </style>
-<script src="js/analytics.js?v=324" defer></script>
+<script src="js/analytics.js?v=325" defer></script>
 </head>
 <body>
 
@@ -313,7 +313,8 @@
     Para trocar de verdade: além do nome em data-nome, coloque a logo em
     assets/img/apoiadores/<arquivo> e aponte o <img src>. Enquanto for teste,
     cada card usa a chama da marca.
-    A esteira só gira quando os cards não couberem na largura da tela.
+    A esteira só se mexe quando os cards não couberem na largura da tela:
+    aí ela gira, aceita arrastar com o dedo e mostra os botões de avançar/voltar.
   -->
   <section id="apoiadores" aria-labelledby="apoiaTitulo" style="padding:6px 0 78px">
     <div class="wrap">
@@ -348,6 +349,17 @@
           <div class="apoia-logo"><img src="assets/img/chama.webp" alt="Logo de Empresa 5" loading="lazy"></div>
           <p class="apoia-nome" data-nome>Empresa 5</p>
         </article>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <div class="esteira-nav" data-nav hidden>
+        <button class="esteira-btn" type="button" data-dir="-1" aria-label="Ver apoiadores anteriores">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+        <button class="esteira-btn" type="button" data-dir="1" aria-label="Ver próximos apoiadores">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
       </div>
     </div>
   </section>
@@ -420,9 +432,9 @@
 </footer>
 
 <script src="assets/blog/posts.js"></script>
-<script src="js/stats.js?v=324" defer></script>
-<script src="js/blog.js?v=324" defer></script>
-<script src="js/app.js?v=324" defer></script>
+<script src="js/stats.js?v=325" defer></script>
+<script src="js/blog.js?v=325" defer></script>
+<script src="js/app.js?v=325" defer></script>
 <!-- aviso de cookies (LGPD): escondido por padrao, o js/cookies.js decide -->
 <div id="avisoCookies" role="dialog" aria-live="polite" aria-label="Aviso de cookies" hidden>
   <div class="ck-caixa">
@@ -433,7 +445,7 @@
     </div>
   </div>
 </div>
-<script src="js/cookies.js?v=324" defer></script>
-<script src="js/esteira.js?v=324" defer></script>
+<script src="js/cookies.js?v=325" defer></script>
+<script src="js/esteira.js?v=325" defer></script>
 </body>
 </html>
