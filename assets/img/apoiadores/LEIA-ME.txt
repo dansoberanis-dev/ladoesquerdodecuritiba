@@ -1,0 +1,16 @@
+LOGOS DAS EMPRESAS APOIADORAS
+=============================
+
+Coloque aqui o arquivo de cada logo. De preferência PNG com fundo transparente,
+na horizontal, com 400 a 600 pixels de largura. O site reduz para caber no card
+e aplica um filtro cinza que ganha cor quando a pessoa passa o mouse.
+
+Para adicionar no site, em index.html, na seção "APOIADORES", copie um bloco
+<article class="apoia-card"> ... </article> e troque:
+
+  - o src da imagem para assets/img/apoiadores/nome-do-arquivo.png
+  - o alt para "Logo de Nome da Empresa"
+  - o texto do <p class="apoia-nome"> para o nome que deve aparecer embaixo
+
+A esteira gira sozinha quando os cards não cabem na largura da tela e fica
+parada quando cabem. Nada mais precisa ser configurado.

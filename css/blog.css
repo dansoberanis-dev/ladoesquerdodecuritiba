@@ -290,3 +290,85 @@
 .artigo-corpo .lec-caixa-texto{flex:1 1 auto;min-width:0}
 .artigo-corpo .lec-caixa-texto p{margin:0 0 8px}
 .artigo-corpo .lec-caixa-texto p:last-child,.artigo-corpo .lec-caixa-texto>:last-child{margin-bottom:0}
+
+/* =====================================================================
+   APOIADORES (empresas que apoiam o projeto)
+   ---------------------------------------------------------------------
+   Cards com logo e nome. A esteira (js/esteira.js) só gira quando os
+   cards não cabem na largura da tela; se couberem, fica parada.
+   ===================================================================== */
+.apoia-topo{
+  display:grid;grid-template-columns:1.35fr .9fr;gap:34px;align-items:end;
+  margin:0 0 30px;
+}
+.apoia-topo h2{
+  margin:12px 0 0;font-size:clamp(26px,3.2vw,38px);font-weight:700;
+  line-height:1.02;letter-spacing:-.02em;max-width:20ch;
+}
+.apoia-nota{
+  margin:0 0 4px;color:var(--muted);font-size:14.5px;line-height:1.6;
+  border-left:2px solid rgba(255,140,26,.45);padding-left:16px;max-width:34ch;
+}
+
+/* faixa da esteira: sangra até a borda e esconde o excesso */
+.esteira{
+  position:relative;overflow:hidden;
+  padding:6px 0 10px;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 46px,#000 calc(100% - 46px),transparent 100%);
+          mask-image:linear-gradient(90deg,transparent 0,#000 46px,#000 calc(100% - 46px),transparent 100%);
+}
+.esteira-trilha{
+  display:flex;gap:16px;width:max-content;
+  padding-inline:26px;             /* alinha o 1º card com o .wrap */
+  will-change:transform;
+}
+.esteira.girando .esteira-trilha{animation:esteira-corre var(--dur,40s) linear infinite}
+.esteira.girando:hover .esteira-trilha,
+.esteira.girando:focus-within .esteira-trilha{animation-play-state:paused}
+@keyframes esteira-corre{
+  from{transform:translate3d(0,0,0)}
+  to{transform:translate3d(calc(var(--larg,-50%) * -1),0,0)}
+}
+
+/* card */
+.apoia-card{
+  flex:0 0 auto;width:230px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  padding:22px 20px 18px;border:1px solid var(--border);border-radius:14px;
+  background:linear-gradient(180deg,rgba(255,236,222,.055),rgba(255,236,222,.015));
+  transition:border-color .35s var(--ease),transform .35s var(--ease),box-shadow .35s var(--ease);
+}
+.apoia-card:hover{
+  border-color:rgba(255,168,110,.34);transform:translateY(-3px);
+  box-shadow:0 22px 42px -30px rgba(0,0,0,.95);
+}
+.apoia-logo{
+  height:74px;width:100%;display:flex;align-items:center;justify-content:center;
+}
+.apoia-logo img{
+  max-height:74px;max-width:100%;width:auto;height:auto;object-fit:contain;
+  filter:grayscale(1) brightness(1.5) contrast(.85);opacity:.82;
+  transition:filter .35s var(--ease),opacity .35s var(--ease),transform .35s var(--ease);
+}
+.apoia-card:hover .apoia-logo img{
+  filter:none;opacity:1;transform:scale(1.04);
+}
+.apoia-nome{
+  margin:0;font-family:'Chakra Petch',system-ui,sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--muted);text-align:center;
+  transition:color .35s;
+}
+.apoia-card:hover .apoia-nome{color:var(--amber-soft)}
+
+@media(max-width:900px){
+  .apoia-topo{grid-template-columns:1fr;gap:18px;align-items:start}
+  .apoia-nota{padding-left:14px;max-width:100%}
+  .apoia-card{width:186px;padding:18px 16px 15px;gap:11px}
+  .apoia-logo,.apoia-logo img{max-height:56px;height:56px}
+  .apoia-nome{font-size:9px;letter-spacing:.13em}
+}
+/* quem pediu menos movimento no sistema vê a faixa parada e rolável */
+@media (prefers-reduced-motion: reduce){
+  .esteira.girando .esteira-trilha{animation:none}
+  .esteira{overflow-x:auto}
+}
