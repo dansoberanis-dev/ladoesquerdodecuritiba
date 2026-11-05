@@ -64,3 +64,17 @@ jobs:
             git commit -m "acervo: espelho do Notion ($(date -u '+%d/%m/%Y %H:%M'))"
             git push
           fi
+
+      - name: Publicar no site (Vercel)
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "Sem o segredo VERCEL_DEPLOY_HOOK: nada a publicar."
+            exit 0
+          fi
+          if [ -n "$(git log -1 --since='10 minutes ago' --pretty=%s | grep '^acervo: espelho')" ]; then
+            curl -s -X POST "$HOOK" -o /dev/null -w "publicacao pedida: %{http_code}\n"
+          else
+            echo "Sem commit novo do acervo nesta rodada: nao publica."
+          fi
