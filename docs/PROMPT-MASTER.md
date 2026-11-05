@@ -1,12 +1,13 @@
 # PROMPT MASTER — Lado Esquerdo de Curitiba (site + blog)
 
 > Documento de retomada. Serve para você voltar ao projeto depois de meses, ou para entregar a outro assistente/desenvolvedor e continuar exatamente de onde paramos.
-> Última atualização: **05/11/2026 — versão 3.1.15**
+> Última atualização: **05/11/2026 — versão 3.1.16**
 
 ---
 
 ## 0. Histórico recente
 
+- **3.1.16 (05/11/2026)** — (1) **Vakinha saiu do ar**: botão, endereço e os dois cards de meta (R$ 6.000 e R$ 1.000) removidos da seção "Apoie o projeto". No lugar, um card de **apoio por Pix** com a chave celular `(41) 99963-6436` (copiada como `+5541999636436`), o nome **Gabriel Andri** e o botão **"Copiar chave Pix"** (`js/pix.js`, com área de transferência moderna e queda para o método antigo; avisa e volta ao normal em 4 s). (2) **Seção de apoiadores oculta**: o bloco inteiro (`#apoiadores`, 5 cards de teste, botões e esteira) está dentro de um comentário HTML, fora do DOM, sem scripts rodando. Para reativar, apagar as linhas SEÇÃO APOIADORES OCULTA e FIM DA OCULTACAO. (3) `js/esteira.js` continua carregado e sai de cena sozinho quando não acha a faixa. (4) Robô do acervo passou de hora em hora para **a cada 15 minutos**.
 - **3.1.15 (05/11/2026)** — esteira dos apoiadores refeita em JavaScript: gira sozinha a 42 px/s quando os cards não cabem, **aceita arrastar com o dedo** (pointer events, `touch-action:pan-y`, sem atrapalhar a rolagem vertical) e ganhou **botões de avançar e voltar** (um card por clique, laço infinito). Os botões só aparecem quando os cards não cabem na largura, a mesma regra da esteira: se couberem, fica tudo parado e sem botões. Arrastar ou clicar segura a esteira por 3,5–4 s. Respeita `prefers-reduced-motion` (não gira sozinha, mas arrasta e usa botões).
 - **3.1.14 (28/10/2026)** — nova seção **"Quem apoia"** (empresas apoiadoras) entre "Apoie o projeto" e "Redes sociais": cards com logo (cinza que ganha cor no hover) e nome embaixo. Quando os cards não cabem na largura da tela, a faixa vira **esteira rotativa** (`js/esteira.js`), com clones `aria-hidden` e pausa no hover; se couberem, fica parada. Respeita `prefers-reduced-motion` (parada e com rolagem manual). 5 cards de teste com a chama e legendas "Empresa 1" a "Empresa 5"; logos reais em `assets/img/apoiadores/`. Também padronizado o card "Nº 1" da seção de redes, que estava com o texto solto.
 - **3.1.13 (28/10/2026)** — redirecionamento de endereço antigo no `middleware.js` (`SLUGS_ANTIGOS`): quando o Slug de uma matéria é corrigido no Notion, o link velho passa a redirecionar (308) para o novo, **mas só depois** que a matéria nova existe no acervo, então não existe janela de "matéria não encontrada". Primeiro caso: `Flávio/Bolsonaro/Fuga/EUA` → `flavio-bolsonaro-fuga-eua`. Comparação sem acento e sem maiúscula, aceita URL codificada.
