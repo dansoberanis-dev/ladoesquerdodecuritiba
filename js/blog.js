@@ -40,7 +40,12 @@
   }
 
   function dataValida(iso) {
-    var d = new Date(iso);
+    if (!iso) return null;
+    var texto = String(iso);
+    // Data sem hora ("2026-11-06") o navegador lê como meia-noite em UTC e, no
+    // fuso do Brasil, ela cai no dia anterior. Meio-dia local resolve e a data
+    // aparece igual à que foi marcada no Notion.
+    var d = new Date(/^\d{4}-\d{2}-\d{2}$/.test(texto) ? texto + 'T12:00:00' : texto);
     return isNaN(d.getTime()) ? null : d;
   }
 
