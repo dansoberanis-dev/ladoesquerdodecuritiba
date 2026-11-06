@@ -440,3 +440,53 @@
   border-color:rgba(120,255,180,.35);
   box-shadow:0 12px 28px -10px rgba(20,120,70,.85),inset 0 1px 0 rgba(200,255,220,.3);
 }
+
+/* ---------- card fantasma: convite para novas empresas ----------
+   Fica sempre na última posição da fileira, com ou sem outras empresas.
+   O js/esteira.js mede ele na largura, mas nunca o clona. */
+.apoia-card.fantasma{
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+  border-style:dashed;border-color:rgba(255,168,110,.26);
+  background:
+    radial-gradient(115% 95% at 76% 6%,rgba(255,140,26,.16) 0%,rgba(232,64,26,.09) 42%,transparent 72%),
+    radial-gradient(90% 80% at 16% 92%,rgba(204,35,24,.20) 0%,transparent 64%),
+    linear-gradient(160deg,#2a1710 0%,#1d120f 55%,#150d0b 100%);
+  box-shadow:none;text-align:center;padding:26px 20px;
+}
+/* a chama da marca, bem apagada, como textura de fundo */
+.apoia-card.fantasma::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:url("../assets/img/chama.webp") center 38%/auto 62% no-repeat;
+  opacity:.16;filter:saturate(.9) brightness(1.1) drop-shadow(0 0 26px rgba(255,140,26,.28));
+}
+.apoia-card.fantasma > *{position:relative;z-index:1}
+.apoia-card.fantasma:hover{border-color:rgba(255,168,110,.46);transform:translateY(-3px)}
+.apoia-fantasma-icone{
+  width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(255,190,140,.3);color:var(--amber-soft);background:rgba(20,13,11,.55);
+}
+.apoia-fantasma-titulo{
+  margin:0;font-family:'Chakra Petch',system-ui,sans-serif;font-size:14px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--fg);line-height:1.25;
+}
+.apoia-fantasma-texto{
+  margin:0;font-family:'Newsreader',Georgia,serif;font-size:13px;line-height:1.5;
+  color:var(--muted);max-width:22ch;
+}
+.apoia-card.fantasma .btn-fire{margin-top:6px;padding:12px 18px;font-size:10.5px;letter-spacing:.13em}
+
+@media(max-width:900px){
+  .apoia-card.fantasma{padding:22px 16px;gap:10px}
+  .apoia-fantasma-titulo{font-size:12.5px}
+  .apoia-fantasma-texto{font-size:12px}
+  .apoia-card.fantasma .btn-fire{padding:10px 14px;font-size:9.5px}
+}
+
+/* quando a esteira gira em tela larga, o convite fica preso na ponta direita */
+.esteira.com-convite-preso .apoia-card.fantasma{
+  position:absolute;right:26px;top:6px;z-index:4;
+}
+.esteira.com-convite-preso .esteira-trilha{
+  padding-right:calc(var(--larg-convite, 300px) + 26px);
+}

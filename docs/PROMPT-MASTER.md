@@ -1,12 +1,13 @@
 # PROMPT MASTER — Lado Esquerdo de Curitiba (site + blog)
 
 > Documento de retomada. Serve para você voltar ao projeto depois de meses, ou para entregar a outro assistente/desenvolvedor e continuar exatamente de onde paramos.
-> Última atualização: **06/11/2026 — versão 3.1.19**
+> Última atualização: **06/11/2026 — versão 3.1.20**
 
 ---
 
 ## 0. Histórico recente
 
+- **3.1.20 (06/11/2026)** — **card fantasma** "Sua empresa aqui" na seção Quem apoia: borda tracejada, fundo com o degradê de brasa e a chama da marca em 16% de opacidade (bem mais apagada que os cards de matéria sem capa, que usam 42%), sinal de mais, texto curto e **botão padrão do site** com ícone do WhatsApp, "Quero apoiar", ligado a `wa.me/5541996873494`. Ele leva o atributo `data-fixo`: entra na conta da largura da esteira mas **nunca é clonado**, então aparece uma vez por volta e fica sempre na última posição, qualquer que seja o número de empresas. Título em 14 px no desktop e 12,5 px no celular.
 - **3.1.19 (06/11/2026)** — **seção "Quem apoia" no ar com a primeira empresa**, Neto & August Hair & Co (Cristo Rei). O card virou um **carrossel de artes**: as 6 peças enviadas pela empresa se dissolvem uma na outra a cada 4 s, em ordem, com bolinhas de posição, setas no hover e arrasto com o dedo no celular (`js/apoiadores.js`). A legenda mostra o nome e "Hair & Co · Cristo Rei", e há um **botão pequeno de contato** com o número das artes, `(41) 99581-6181`, abrindo o WhatsApp (`wa.me/5541995816181`). Degradê sobre a arte reduzido para quase nada, para não apagar o texto das peças. Imagens em `assets/img/apoiadores/neto-august-1..6.jpg` (1080×1350, qualidade 82). Arquivos de teste `_exemplo-*` e o `neto-august.jpg` antigo foram apagados.
 - **3.1.18 (05/11/2026)** — correção de **data adiantada em um dia**. O Notion entrega a data como `2026-11-06` (sem hora); o navegador lia isso como meia-noite em UTC e, no fuso de Brasília, exibia o dia anterior. `js/blog.js` (`dataValida`) agora acrescenta `T12:00:00` quando a data vem sem hora, então o card da home, a lista do blog e o cabeçalho da matéria mostram exatamente a data marcada no Notion. O `middleware.js` já tinha esse cuidado; a falha estava só no JavaScript do navegador.
 - **3.1.17 (05/11/2026)** — correção: o ZIP da 3.1.16 levou uma cópia antiga do `acervo.yml` e apagou o passo **"Publicar no site (Vercel)"** (que chama o Deploy Hook). Passo devolvido e agora mantido **dentro do próprio pacote**, junto com o cron de 15 minutos. Regra a partir daqui: o `acervo.yml` do ZIP é a versão boa e não deve ser substituído por uma cópia local mais velha.

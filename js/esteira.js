@@ -8,7 +8,9 @@
    Quando não cabem:
    1. os cards são clonados uma vez (aria-hidden) para o laço não ter
       buraco nenhum;
-   2. a faixa gira sozinha a 42 px/s, no desktop e no celular;
+   2. a faixa gira sozinha a 42 px/s, no desktop e no celular (as peças
+      marcadas com data-fixo, como o convite "sua empresa aqui", aparecem
+      uma vez por volta e nunca são duplicadas);
    3. dá para arrastar com o dedo (ou com o mouse), sem perder a rolagem
       vertical da página;
    4. aparecem os botões de avançar e voltar, um card por clique;
@@ -33,6 +35,17 @@
       return !el.hasAttribute('data-clone');
     });
     if (!originais.length) return;
+
+    // peças marcadas com data-fixo (o convite "sua empresa aqui") nunca são
+    // clonadas. Em tela larga, quando a esteira começa a girar, elas saem do
+    // fluxo e ficam presas na ponta direita, sempre visíveis. Em tela estreita
+    // continuam no fim da fila, girando junto.
+    var clonaveis = originais.filter(function (el) {
+      return !el.hasAttribute('data-fixo');
+    });
+    var convites = originais.filter(function (el) {
+      return el.hasAttribute('data-fixo');
+    });
 
     var VELOCIDADE = 42;      // pixels por segundo, igual em qualquer tela
     var DURACAO_CLIQUE = 340; // tempo do deslize de um clique nos botões
@@ -167,26 +180,53 @@
     faixa.addEventListener('pointerleave', function () { sobre = false; });
 
     /* ---------- medição ---------- */
+    // o convite precisa ficar pendurado na faixa (e não na trilha) para poder
+    // ser preso na ponta direita: dentro da trilha, o transform faz dele a
+    // referência de posicionamento
+    function conviteNoFluxo() {
+      convites.forEach(function (el) {
+        if (el.parentNode !== trilha) trilha.appendChild(el);
+      });
+    }
+
     function limparClones() {
       clonados.forEach(function (n) {
         if (n.parentNode) n.parentNode.removeChild(n);
       });
       clonados = [];
       faixa.classList.remove('girando');
+      faixa.classList.remove('com-convite-preso');
+      faixa.style.removeProperty('--larg-convite');
+      conviteNoFluxo();
     }
 
     function medir() {
       var cs = getComputedStyle(trilha);
       var gap = parseFloat(cs.columnGap || cs.gap) || 0;
+
+      // largura dos cards que giram (sem o convite e sem os clones)
       var total = 0;
-      originais.forEach(function (el, i) {
+      clonaveis.forEach(function (el, i) {
         total += el.getBoundingClientRect().width + (i ? gap : 0);
       });
-      return { larguraCards: total, gap: gap, disponivel: faixa.clientWidth };
+
+      // espaço que o convite ocupa, para ele não ser atropelado
+      var larguraConvite = 0;
+      convites.forEach(function (el) {
+        larguraConvite += el.getBoundingClientRect().width + gap;
+      });
+
+      return {
+        larguraCards: total,
+        larguraConvite: larguraConvite,
+        gap: gap,
+        disponivel: faixa.clientWidth
+      };
     }
 
     function ajustar() {
       limparClones();
+      conviteNoFluxo();
       tween = null;
       arrastando = false;
       pos = 0;
@@ -201,13 +241,21 @@
 
       if (!m.larguraCards || !m.disponivel) return;
 
-      // cabe na tela: fica parada, sem clones e sem botões
-      if (m.larguraCards <= m.disponivel) {
+      // cabe na tela (contando o convite): fica parada, sem clones e sem botões
+      if (m.larguraCards + m.larguraConvite <= m.disponivel) {
         faixa.setAttribute('data-pronto', '1');
         return;
       }
 
-      originais.forEach(function (el) {
+      // tela larga: o convite fica preso na ponta direita, fora do giro
+      var prender = faixa.clientWidth >= 760 && convites.length > 0;
+      if (prender) {
+        convites.forEach(function (el) { faixa.appendChild(el); });
+        faixa.classList.add('com-convite-preso');
+        faixa.style.setProperty('--larg-convite', m.larguraConvite + 'px');
+      }
+
+      clonaveis.forEach(function (el) {
         var copia = el.cloneNode(true);
         copia.setAttribute('aria-hidden', 'true');
         copia.setAttribute('data-clone', '1');
@@ -219,7 +267,7 @@
       });
 
       bloco = m.larguraCards + m.gap;
-      passo = bloco / originais.length;
+      passo = bloco / (clonaveis.length || 1);
       ativo = true;
       pos = 0;
       aplicar();
