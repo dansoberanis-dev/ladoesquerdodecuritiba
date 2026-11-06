@@ -1,12 +1,13 @@
 # PROMPT MASTER — Lado Esquerdo de Curitiba (site + blog)
 
 > Documento de retomada. Serve para você voltar ao projeto depois de meses, ou para entregar a outro assistente/desenvolvedor e continuar exatamente de onde paramos.
-> Última atualização: **05/11/2026 — versão 3.1.18**
+> Última atualização: **06/11/2026 — versão 3.1.19**
 
 ---
 
 ## 0. Histórico recente
 
+- **3.1.19 (06/11/2026)** — **seção "Quem apoia" no ar com a primeira empresa**, Neto & August Hair & Co (Cristo Rei). O card virou um **carrossel de artes**: as 6 peças enviadas pela empresa se dissolvem uma na outra a cada 4 s, em ordem, com bolinhas de posição, setas no hover e arrasto com o dedo no celular (`js/apoiadores.js`). A legenda mostra o nome e "Hair & Co · Cristo Rei", e há um **botão pequeno de contato** com o número das artes, `(41) 99581-6181`, abrindo o WhatsApp (`wa.me/5541995816181`). Degradê sobre a arte reduzido para quase nada, para não apagar o texto das peças. Imagens em `assets/img/apoiadores/neto-august-1..6.jpg` (1080×1350, qualidade 82). Arquivos de teste `_exemplo-*` e o `neto-august.jpg` antigo foram apagados.
 - **3.1.18 (05/11/2026)** — correção de **data adiantada em um dia**. O Notion entrega a data como `2026-11-06` (sem hora); o navegador lia isso como meia-noite em UTC e, no fuso de Brasília, exibia o dia anterior. `js/blog.js` (`dataValida`) agora acrescenta `T12:00:00` quando a data vem sem hora, então o card da home, a lista do blog e o cabeçalho da matéria mostram exatamente a data marcada no Notion. O `middleware.js` já tinha esse cuidado; a falha estava só no JavaScript do navegador.
 - **3.1.17 (05/11/2026)** — correção: o ZIP da 3.1.16 levou uma cópia antiga do `acervo.yml` e apagou o passo **"Publicar no site (Vercel)"** (que chama o Deploy Hook). Passo devolvido e agora mantido **dentro do próprio pacote**, junto com o cron de 15 minutos. Regra a partir daqui: o `acervo.yml` do ZIP é a versão boa e não deve ser substituído por uma cópia local mais velha.
 - **3.1.16 (05/11/2026)** — (1) **Vakinha saiu do ar**: botão, endereço e os dois cards de meta (R$ 6.000 e R$ 1.000) removidos da seção "Apoie o projeto". No lugar, um card de **apoio por Pix** com a chave celular `(41) 99963-6436` (copiada como `+5541999636436`), o nome **Gabriel Andri** e o botão **"Copiar chave Pix"** (`js/pix.js`, com área de transferência moderna e queda para o método antigo; avisa e volta ao normal em 4 s). (2) **Seção de apoiadores oculta**: o bloco inteiro (`#apoiadores`, 5 cards de teste, botões e esteira) está dentro de um comentário HTML, fora do DOM, sem scripts rodando. Para reativar, apagar as linhas SEÇÃO APOIADORES OCULTA e FIM DA OCULTACAO. (3) `js/esteira.js` continua carregado e sai de cena sozinho quando não acha a faixa. (4) Robô do acervo passou de hora em hora para **a cada 15 minutos**.
