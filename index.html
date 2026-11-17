@@ -27,8 +27,8 @@
 <meta name="theme-color" content="#120c0a"/>
 <link rel="icon" type="image/png" href="assets/img/favicon.png"/>
 <link rel="apple-touch-icon" href="assets/img/favicon.png"/>
-<link rel="stylesheet" href="css/estilos.css?v=330">
-<link rel="stylesheet" href="css/blog.css?v=330">
+<link rel="stylesheet" href="css/estilos.css?v=331">
+<link rel="stylesheet" href="css/blog.css?v=331">
 <style>
 /* acessibilidade que NÃO pode depender do cache do CSS externo */
 .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
@@ -40,6 +40,56 @@
 </style>
 <style>
 /* aviso de cookies — estilo inline para nao depender do cache do CSS externo */
+/* ---------- pop-up 300 mil (temporário) ---------- */
+#popup300{position:fixed;inset:0;z-index:9500;display:flex;align-items:center;justify-content:center;
+  padding:20px;background:rgba(8,5,4,.72);backdrop-filter:blur(3px);
+  opacity:0;transition:opacity .32s ease}
+#popup300.aberto{opacity:1}
+#popup300[hidden]{display:none!important}
+#popup300 .p300-caixa{position:relative;width:100%;max-width:430px;border-radius:18px;overflow:hidden;
+  text-align:center;padding:34px 28px 28px;
+  border:1px solid rgba(255,170,110,.28);
+  background:
+    radial-gradient(120% 100% at 84% 0%,rgba(255,140,26,.24),transparent 62%),
+    radial-gradient(90% 90% at 12% 100%,rgba(204,35,24,.3),transparent 66%),
+    linear-gradient(170deg,#2b1712 0%,#1d1210 58%,#150d0b 100%);
+  box-shadow:0 40px 90px -40px rgba(0,0,0,.95),inset 0 1px 0 rgba(255,214,176,.1);
+  transform:translateY(14px) scale(.985);transition:transform .32s var(--ease)}
+#popup300.aberto .p300-caixa{transform:none}
+#popup300 .p300-caixa::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:url("../assets/img/chama.webp") center 12%/auto 52% no-repeat;
+  opacity:.2;filter:saturate(1.1) brightness(1.1) drop-shadow(0 0 34px rgba(255,140,26,.35))}
+#popup300 .p300-caixa > *{position:relative;z-index:1}
+#popup300 .p300-fechar{position:absolute;top:12px;right:12px;z-index:2;width:32px;height:32px;padding:0;
+  border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  background:rgba(20,13,11,.5);border:1px solid rgba(255,190,140,.24);color:var(--amber-soft);
+  transition:border-color .25s,background .25s,color .25s}
+#popup300 .p300-fechar:hover{border-color:rgba(255,190,140,.55);color:var(--fg);background:rgba(255,140,26,.16)}
+#popup300 .p300-kicker{margin:0;font-family:'Chakra Petch',system-ui,sans-serif;font-size:9.5px;font-weight:700;
+  letter-spacing:.26em;text-transform:uppercase;color:var(--amber-soft)}
+#popup300 .p300-numero{margin:10px 0 0;font-family:'Chakra Petch',system-ui,sans-serif;
+  font-size:clamp(64px,15vw,84px);font-weight:700;line-height:.86;letter-spacing:-.03em;
+  background:linear-gradient(96deg,var(--flame),var(--amber) 52%,var(--amber-soft));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+#popup300 .p300-numero span{font-size:.34em;letter-spacing:.02em;margin-left:8px;
+  -webkit-text-fill-color:var(--fg);vertical-align:super}
+#popup300 .p300-titulo{margin:6px 0 0;font-family:'Chakra Petch',system-ui,sans-serif;
+  font-size:14px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--fg)}
+#popup300 .p300-texto{margin:14px auto 0;max-width:32ch;font-family:Newsreader,Georgia,serif;
+  font-size:15px;line-height:1.55;color:#cbbdb4}
+#popup300 .p300-acoes{margin:22px 0 0;display:flex;flex-direction:column;gap:10px;align-items:center}
+#popup300 .p300-follow{padding:14px 22px;font-size:11px;width:100%;max-width:280px;justify-content:center}
+#popup300 .p300-depois{background:none;border:0;padding:6px 4px;cursor:pointer;
+  font-family:'Chakra Petch',system-ui,sans-serif;font-size:9.5px;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted-2);transition:color .25s}
+#popup300 .p300-depois:hover{color:var(--amber-soft)}
+@media(max-width:420px){
+  #popup300 .p300-caixa{padding:30px 20px 24px}
+  #popup300 .p300-texto{font-size:14px}
+}
+@media (prefers-reduced-motion: reduce){
+  #popup300,#popup300 .p300-caixa{transition:none}
+}
 #avisoCookies{position:fixed;left:0;right:0;bottom:0;z-index:9000;padding:14px;
   display:flex;justify-content:center;pointer-events:none;
   opacity:0;transform:translateY(14px);transition:opacity .3s ease,transform .3s ease}
@@ -69,7 +119,7 @@
   #avisoCookies .ck-btn{padding:12px 10px;font-size:10px;text-align:center}
 }
 </style>
-<script src="js/analytics.js?v=330" defer></script>
+<script src="js/analytics.js?v=331" defer></script>
 </head>
 <body>
 
@@ -398,11 +448,11 @@
       <div class="stats-2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
         <div class="stat-fire reveal" style="grid-column:span 2">
           <div style="position:relative;z-index:1">
-            <p class="font-display" data-stat="seguidores" style="margin:0;font-size:clamp(44px,5.4vw,58px);font-weight:700;line-height:.95;letter-spacing:-.02em">290 mil</p>
+            <p class="font-display" data-stat="seguidores" style="margin:0;font-size:clamp(44px,5.4vw,58px);font-weight:700;line-height:.95;letter-spacing:-.02em">301 mil</p>
             <p style="margin:8px 0 0;font-family:'Chakra Petch';font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;opacity:.94">seguidores no Instagram<span class="stat-fonte" id="statFonte" hidden></span></p>
           </div>
         </div>
-        <div class="stat-mini reveal" style="transition-delay:.05s"><p class="font-display" data-stat="publicacoes" style="margin:0;font-size:36px;font-weight:700;line-height:1">5.412</p><p class="meta" style="margin:7px 0 0">publicações</p></div>
+        <div class="stat-mini reveal" style="transition-delay:.05s"><p class="font-display" data-stat="publicacoes" style="margin:0;font-size:36px;font-weight:700;line-height:1">5.673</p><p class="meta" style="margin:7px 0 0">publicações</p></div>
         <div class="stat-mini reveal" style="transition-delay:.1s"><p class="font-display" data-stat="seguindo" style="margin:0;font-size:36px;font-weight:700;line-height:1">1.636</p><p class="meta" style="margin:7px 0 0">perfis seguidos</p></div>
         <div class="stat-mini reveal" style="transition-delay:.15s;grid-column:span 2">
           <p class="stat-linha" style="margin:0;display:flex;align-items:baseline;gap:11px;flex-wrap:wrap">
@@ -444,9 +494,31 @@
 </footer>
 
 <script src="assets/blog/posts.js"></script>
-<script src="js/stats.js?v=330" defer></script>
-<script src="js/blog.js?v=330" defer></script>
-<script src="js/app.js?v=330" defer></script>
+<script src="js/stats.js?v=331" defer></script>
+<script src="js/blog.js?v=331" defer></script>
+<script src="js/app.js?v=331" defer></script>
+<!-- pop-up temporario: passamos de 300 mil seguidores.
+     Fecha sozinho, nao volta na mesma visita, e nao aparece para quem ja fechou
+     (memoria de 20 dias no navegador). Para desligar de vez: apagar este bloco. -->
+<div id="popup300" class="p300" role="dialog" aria-modal="false" aria-labelledby="p300titulo" hidden>
+  <div class="p300-caixa">
+    <button class="p300-fechar" type="button" data-p300-fechar aria-label="Fechar aviso">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <p class="p300-kicker">Levante a taça</p>
+    <p class="p300-numero">300<span>mil</span></p>
+    <h2 class="p300-titulo" id="p300titulo">seguidores na trincheira</h2>
+    <p class="p300-texto">Passamos de 300 mil pessoas acompanhando o jornalismo independente de Curitiba. Cada uma delas é um tijolo nessa parede.</p>
+    <div class="p300-acoes">
+      <a class="btn-fire p300-follow" href="https://www.instagram.com/ladoesquerdodecuritiba/" target="_blank" rel="noopener noreferrer">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="2.6" y="2.6" width="18.8" height="18.8" rx="5.6"/><circle cx="12" cy="12" r="4.1"/><circle cx="17.3" cy="6.7" r="1.15" fill="currentColor" stroke="none"/></svg>
+        Seguir no Instagram
+      </a>
+      <button class="p300-depois" type="button" data-p300-fechar>Continuar lendo</button>
+    </div>
+  </div>
+</div>
+<script src="js/popup300.js?v=331" defer></script>
 <!-- aviso de cookies (LGPD): escondido por padrao, o js/cookies.js decide -->
 <div id="avisoCookies" role="dialog" aria-live="polite" aria-label="Aviso de cookies" hidden>
   <div class="ck-caixa">
@@ -457,9 +529,9 @@
     </div>
   </div>
 </div>
-<script src="js/cookies.js?v=330" defer></script>
-<script src="js/esteira.js?v=330" defer></script>
-<script src="js/apoiadores.js?v=330" defer></script>
-<script src="js/pix.js?v=330" defer></script>
+<script src="js/cookies.js?v=331" defer></script>
+<script src="js/esteira.js?v=331" defer></script>
+<script src="js/apoiadores.js?v=331" defer></script>
+<script src="js/pix.js?v=331" defer></script>
 </body>
 </html>
